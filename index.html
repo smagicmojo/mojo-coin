@@ -5,28 +5,24 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>$MOJO — The coin with the magic mojo</title>
   <meta name="description" content="$MOJO is the coin with the magic mojo on Solana. Fun community, fast vibes, and meme-fueled momentum." />
-  <!-- Open Graph / X -->
   <meta property="og:title" content="$MOJO — The coin with the magic mojo" />
   <meta property="og:description" content="Join the $MOJO army. Meme, raid, pump. Solana speed, jungle energy." />
   <meta property="og:image" content="images/mojo-social.png" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="images/favicon.png" />
-
-  <!-- Solana web3.js (Phantom) -->
   <script defer src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
-
   <style>
     :root{
       --bg:#0c0c0f; --card:#141418; --ink:#ffffff; --muted:#b5b8c7;
       --accent:#ffd84d; --accent-ink:#141418; --line:#22222a; --good:#2ad37f;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;height:100%;scroll-behavior:smooth;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial}
+    html,body{margin:0;height:100%;scroll-behavior:smooth;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui}
     a{color:var(--accent);text-decoration:none} a:hover{opacity:.9}
     .wrap{max-width:1080px;margin:0 auto;padding:24px}
     .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
-    .nav img{height:44px;width:auto}
+    .nav img{height:44px}
     .nav .links a{margin-left:16px;font-weight:600}
     .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;padding:26px 0}
     .hero .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
@@ -37,427 +33,172 @@
     .btn{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-ink);padding:12px 16px;border-radius:10px;font-weight:800;border:0;cursor:pointer}
     .btn.secondary{background:transparent;border:1px solid var(--line);color:var(--ink)}
     .btn.good{background:var(--good);color:#09110b}
-    .pill{display:inline-flex;gap:10px;align-items:center;background:#101015;border:1px dashed var(--line);padding:10px;border-radius:10px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+    .pill{display:inline-flex;gap:10px;align-items:center;background:#101015;border:1px dashed var(--line);padding:10px;border-radius:10px;color:var(--muted);font-family:ui-monospace}
     .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
     .section{padding:40px 0;border-top:1px solid var(--line)}
     .sec-title{font-size:26px;margin:0 0 14px}
     .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
-    ul.clean{list-style:none;margin:0;padding:0} ul.clean li{margin:8px 0;color:var(--muted)}
     .kpis{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
     .kpi{flex:1 1 160px;background:#101015;border:1px solid var(--line);border-radius:12px;padding:12px}
     .kpi b{font-size:22px}
     .foot{padding:28px 0;color:var(--muted);text-align:center}
     .tag{display:inline-block;background:#101015;border:1px solid var(--line);padding:4px 10px;border-radius:999px;color:var(--muted);font-size:13px;margin:4px 6px 0 0}
-    .how{counter-reset:step} .how li{counter-increment:step}
-    .how li::marker{content: counter(step) ". "}
-    @media (max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
-
-    /* Wallet card */
+    @media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+    /* Wallet + game */
     .wallet-card{margin-top:14px;display:none}
     .wallet-card.show{display:block}
-
-    /* Game styles */
     .game-wrap{margin-top:18px}
     .game-top{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:10px}
-    .play-area{position:relative;height:340px;border:1px dashed var(--line);border-radius:12px;overflow:hidden;background:
-      radial-gradient(1200px 300px at 50% -20%,rgba(255,216,77,.1),transparent),
-      linear-gradient(180deg,#101015,#0c0c0f)}
-    .banana{position:absolute;font-size:28px;cursor:pointer;user-select:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,.4))}
+    .play-area{position:relative;height:340px;border:1px dashed var(--line);border-radius:12px;overflow:hidden;background:radial-gradient(1200px 300px at 50% -20%,rgba(255,216,77,.1),transparent),linear-gradient(180deg,#101015,#0c0c0f)}
+    .banana{position:absolute;font-size:28px;cursor:pointer;user-select:none}
     .hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.7}
   </style>
 </head>
 <body>
-  <header class="wrap nav">
-    <div style="display:flex;align-items:center;gap:12px">
-      <img src="mojo-logo.jpeg" alt="$MOJO logo" />
-      <strong>$MOJO</strong>
-      <span class="tag">Solana</span>
-      <span class="tag">Meme</span>
+<header class="wrap nav">
+  <div style="display:flex;align-items:center;gap:12px">
+    <img src="mojo-logo.jpeg" alt="$MOJO logo" />
+    <strong>$MOJO</strong>
+    <span class="tag">Solana</span><span class="tag">Meme</span>
+  </div>
+  <div class="links">
+    <a href="#buy">Buy</a>
+    <a href="#chart">Chart</a>
+    <a href="#tokenomics">Tokenomics</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#community">Community</a>
+    <a href="https://t.me/mojo_coin1" target="_blank">Telegram</a>
+    <a href="https://x.com/magicmojocoin" target="_blank">X</a>
+    <button id="connectBtn" class="btn">Connect Wallet</button>
+  </div>
+</header>
+
+<main class="wrap hero">
+  <div class="card">
+    <span class="badge">The coin with the magic mojo ✨</span>
+    <h1>Meet <span style="color:var(--accent)">$MOJO</span> — jungle energy on Solana 🐒</h1>
+    <p class="lead">Fast vibes. Fun memes. Community pumped. Grab your MOJO and let’s send it to the moon.</p>
+
+    <div class="pill" id="contractBox">
+      <span>Contract:</span>
+      <code id="contract">COMING-SOON</code>
+      <button class="btn secondary" id="copyBtn">Copy</button>
     </div>
-    <div class="links" style="display:flex;align-items:center;gap:12px">
-      <a href="#buy">Buy</a>
-      <a href="#chart">Chart</a>
-      <a href="#tokenomics">Tokenomics</a>
-      <a href="#roadmap">Roadmap</a>
-      <a href="#community">Community</a>
-      <!-- NEW: Connect Wallet -->
-      <button id="connectBtn" class="btn">Connect Wallet</button>
-    </div>
-  </header>
 
-  <main class="wrap hero">
-    <div class="card">
-      <span class="badge">The coin with the magic mojo ✨</span>
-      <h1>Meet <span style="color:var(--accent)">$MOJO</span> — jungle energy on Solana 🐒</h1>
-      <p class="lead">Fast vibes. Fun memes. Community pumped. Grab your MOJO and let’s send it to the moon.</p>
-
-      <!-- Contract -->
-      <div class="pill" id="contractBox">
-        <span>Contract:</span>
-        <code id="contract">COMING-SOON-AFTER-LAUNCH</code>
-        <button class="btn secondary" id="copyBtn" style="margin-left:auto">Copy</button>
-      </div>
-
-      <!-- NEW: Wallet info card -->
-      <div id="walletCard" class="card wallet-card">
-        <div><strong>Wallet:</strong> <span id="walletAddr">—</span></div>
-        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-          <button id="signBtn" class="btn secondary">Sign In (verify)</button>
-          <span id="walletStatus" class="tag">Disconnected</span>
-        </div>
-      </div>
-
-      <div class="cta">
-        <a class="btn good" id="buyNow" href="#" target="_blank" rel="noopener">Buy on Pump.fun</a>
-        <a class="btn secondary" id="chartBtn" href="#" target="_blank" rel="noopener">View Live Chart</a>
-        <a class="btn secondary" href="#tokenomics">Tokenomics</a>
-        <a class="btn secondary" href="#game">Play Game</a>
-      </div>
-
-      <div class="kpis">
-        <div class="kpi"><b>0%</b><div>Buy/Sell Tax</div></div>
-        <div class="kpi"><b>Fair</b><div>Launch</div></div>
-        <div class="kpi"><b>Locked</b><div>Liquidity</div></div>
+    <!-- Wallet info -->
+    <div id="walletCard" class="card wallet-card">
+      <div><strong>Wallet:</strong> <span id="walletAddr">—</span></div>
+      <div style="margin-top:8px;display:flex;gap:8px">
+        <button id="signBtn" class="btn secondary">Sign In</button>
+        <span id="walletStatus" class="tag">Disconnected</span>
       </div>
     </div>
 
-    <div class="card">
-      <img src="hero-mascot.png" alt="MOJO mascot" style="width:100%;border-radius:12px" />
+    <div class="cta">
+      <a class="btn good" id="buyNow" href="#" target="_blank">Buy on Pump.fun</a>
+      <a class="btn secondary" id="chartBtn" href="#" target="_blank">View Chart</a>
+      <a class="btn secondary" href="#game">Play Game</a>
     </div>
-  </main>
+  </div>
+  <div class="card">
+    <img src="hero-mascot.png" alt="MOJO mascot" style="width:100%;border-radius:12px" />
+  </div>
+</main>
 
-  <!-- Your sections (unchanged) -->
-  <section class="wrap section" id="about">
-    <h2 class="sec-title">What is $MOJO?</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Meme + Momentum</h3>
-        <p class="muted">MOJO is culture-first: daily memes, raids, and ridiculous energy. We keep it fun so it keeps moving.</p>
-      </div>
-      <div class="card">
-        <h3>Fair on Solana</h3>
-        <p class="muted">Blazing transactions, tiny fees, and instant vibes. No presale tricks. Just vibes.</p>
-      </div>
-      <div class="card">
-        <h3>Community Core</h3>
-        <p class="muted">Contests, giveaways, raids — holders shape the jungle. With great MOJO comes great pump power.</p>
-      </div>
+<!-- GAME -->
+<section class="wrap section" id="game">
+  <h2 class="sec-title">Banana Dash 🍌</h2>
+  <div class="card game-wrap">
+    <div class="game-top">
+      <div><b>Time:</b> <span id="timeLeft">—</span>s</div>
+      <div><b>Score:</b> <span id="score">0</span></div>
+      <div><b>Best:</b> <span id="bestScore">0</span></div>
     </div>
-  </section>
-
-  <section class="wrap section" id="buy">
-    <h2 class="sec-title">How to Buy</h2>
-    <ol class="how">
-      <li>Get SOL in your wallet (Phantom/Solflare).</li>
-      <li>Click “Buy on Pump.fun” (or Raydium after migration).</li>
-      <li>Swap SOL → $MOJO. Boom, you’ve got your mojo.</li>
-    </ol>
-    <p class="muted">Tip: Always verify the contract address from our Telegram pinned message.</p>
-  </section>
-
-  <section class="wrap section" id="chart">
-    <h2 class="sec-title">Live Chart</h2>
-    <div class="card">
-      <p class="muted">Add your chart link after launch. For now:</p>
-      <ul class="clean">
-        <li>Dexscreener: <a id="dexLink" href="#" target="_blank" rel="noopener">Coming soon</a></li>
-        <li>Birdeye: <a id="birdLink" href="#" target="_blank" rel="noopener">Coming soon</a></li>
-      </ul>
+    <div id="playArea" class="play-area">
+      <div id="hint" class="hint">Press Start — catch bananas! 🍌</div>
     </div>
-  </section>
-
-  <section class="wrap section" id="tokenomics">
-    <h2 class="sec-title">Tokenomics</h2>
-    <div class="grid">
-      <div class="card"><h3>Supply</h3><p class="muted">1,000,000,000 $MOJO</p></div>
-      <div class="card"><h3>Taxes</h3><p class="muted">0% buy / 0% sell</p></div>
-      <div class="card"><h3>Liquidity</h3><p class="muted">Locked on launch</p></div>
+    <div class="cta" style="margin-top:12px">
+      <button id="startBtn" class="btn">Start</button>
+      <button id="shareBtn" class="btn secondary">Copy Score</button>
     </div>
-  </section>
+    <p id="cooldown" class="muted"></p>
+  </div>
+</section>
 
-  <section class="wrap section" id="roadmap">
-    <h2 class="sec-title">Roadmap</h2>
-    <div class="grid">
-      <div class="card">
-        <h3>Phase 1 — Vibes</h3>
-        <ul class="clean">
-          <li>Launch on Pump.fun</li>
-          <li>Dexscreener listing</li>
-          <li>Meme contests + raids</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Phase 2 — Growth</h3>
-        <ul class="clean">
-          <li>Influencer push</li>
-          <li>Community quests</li>
-          <li>Partnership memes</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>Phase 3 — ??</h3>
-        <ul class="clean">
-          <li>NFT drops / utility experiments</li>
-          <li>More jungle, more MOJO</li>
-        </ul>
-      </div>
-    </div>
-  </section>
+<section class="wrap section" id="community">
+  <h2 class="sec-title">Community</h2>
+  <div class="card" style="display:flex;gap:10px;flex-wrap:wrap">
+    <a class="btn" href="https://t.me/mojo_coin1" target="_blank">Join Telegram</a>
+    <a class="btn secondary" href="https://x.com/magicmojocoin" target="_blank">Follow on X</a>
+  </div>
+</section>
 
-  <section class="wrap section" id="community">
-    <h2 class="sec-title">Community</h2>
-    <div class="card" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-      <a class="btn" href="https://t.me/mojo_coin1" target="_blank" rel="noopener">Join Telegram</a>
-      <a class="btn secondary" href="https://x.com/magicmojocoin?s=11" target="_blank" rel="noopener">Follow on X</a>
-      <span class="tag">#MOJO</span><span class="tag">#Solana</span><span class="tag">#memecoin</span>
-    </div>
-  </section>
+<footer class="wrap foot">
+  ©️ <span id="y"></span> $MOJO. DYOR.
+</footer>
 
-  <!-- NEW: GAME SECTION -->
-  <section class="wrap section" id="game">
-    <h2 class="sec-title">Banana Dash 🍌</h2>
-    <div class="card game-wrap">
-      <div class="game-top">
-        <div><b>Time:</b> <span id="timeLeft">—</span>s</div>
-        <div><b>Score:</b> <span id="score">0</span></div>
-        <div><b>Best (this wallet):</b> <span id="bestScore">0</span></div>
-      </div>
-      <div id="playArea" class="play-area">
-        <div id="hint" class="hint">Press Start — catch bananas! 🍌</div>
-      </div>
-      <div class="cta" style="margin-top:12px">
-        <button id="startBtn" class="btn">Start (1 play/day)</button>
-        <button id="shareBtn" class="btn secondary">Copy Score</button>
-      </div>
-      <p id="cooldown" class="muted" style="margin-top:8px"></p>
-    </div>
-    <p class="muted" style="margin-top:10px">No keys collected. No fees. Sign a message only to verify ownership. Scores saved locally per wallet.</p>
-  </section>
+<script>
+  document.getElementById('y').textContent = new Date().getFullYear();
 
-  <footer class="wrap foot">
-    ©️ <span id="y"></span> $MOJO. This is a community-driven meme project. DYOR.
-  </footer>
+  /* ===== WALLET CONNECT ===== */
+  const connectBtn=document.getElementById('connectBtn');
+  const signBtn=document.getElementById('signBtn');
+  const walletCard=document.getElementById('walletCard');
+  const walletAddr=document.getElementById('walletAddr');
+  const walletStatus=document.getElementById('walletStatus');
+  let provider=null, publicKey=null, isSigned=false;
+  const fmt=pk=>pk?pk.slice(0,4)+'...'+pk.slice(-4):'guest';
 
-  <script>
-    // YEAR
-    document.getElementById('y').textContent = new Date().getFullYear();
+  async function connectWallet(){
+    provider=window.solana;
+    if(!provider||!provider.isPhantom){alert("Open inside Phantom or install extension.");return;}
+    try{const resp=await provider.connect();publicKey=resp.publicKey?.toString();
+      walletCard.classList.add('show');walletAddr.textContent=fmt(publicKey);
+      walletStatus.textContent="Connected";connectBtn.textContent="Connected";connectBtn.disabled=true;
+      bestScoreEl.textContent=getBest();
+    }catch(e){console.error(e);}
+  }
+  async function signIn(){
+    if(!provider||!publicKey){alert("Connect wallet first");return;}
+    if(typeof provider.signMessage!=='function'){alert("Update Phantom or open in Phantom Browser (mobile)");return;}
+    const msg=`Sign in to $MOJO Jungle\nAddress: ${publicKey}\nNonce: ${crypto.getRandomValues(new Uint32Array(1))[0]}`;
+    const encoded=new TextEncoder().encode(msg);
+    try{const res=await provider.signMessage(encoded,'utf8');if(res?.signature){isSigned=true;walletStatus.textContent="Signed ✓";}}catch{}
+  }
+  connectBtn.addEventListener('click',connectWallet);
+  signBtn.addEventListener('click',signIn);
 
-    // QUICK SETUP: Paste your links after launch ↓
-    const CONTRACT_ADDRESS = 'COMING-SOON-AFTER-LAUNCH';
-    const PUMPFUN_LINK = '#';        // e.g. https://pump.fun/XXXX
-    const DEXSCREENER = '#';         // e.g. https://dexscreener.com/solana/<tokenaddress>
-    const BIRDEYE = '#';             // e.g. https://birdeye.so/token/<tokenaddress>?chain=solana
+  /* ===== GAME ===== */
+  const startBtn=document.getElementById('startBtn');
+  const playArea=document.getElementById('playArea');
+  const timeEl=document.getElementById('timeLeft');
+  const scoreEl=document.getElementById('score');
+  const bestScoreEl=document.getElementById('bestScore');
+  const cooldownEl=document.getElementById('cooldown');
+  const shareBtn=document.getElementById('shareBtn');
+  let time=20,score=0,timer,spawner;
 
-    // Apply
-    document.getElementById('contract').textContent = CONTRACT_ADDRESS;
-    document.getElementById('buyNow').href = PUMPFUN_LINK;
-    document.getElementById('chartBtn').href = DEXSCREENER;
-    document.getElementById('dexLink').href = DEXSCREENER;
-    document.getElementById('birdLink').href = BIRDEYE;
+  function todayKey(){const d=new Date();return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;}
+  const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){localStorage.setItem(k,JSON.stringify(v))}};
+  const perWalletKey=(b)=>`${b}:${publicKey||'guest'}`;
+  function getBest(){return store.get(perWalletKey('best'),0)}
+  function setBest(v){store.set(perWalletKey('best'),Number(v))}
+  function getPlays(){const m=store.get(perWalletKey('plays'),{});return m[todayKey()]||0}
+  function incPlays(){const k=perWalletKey('plays');const m=store.get(k,{});const t=todayKey();m[t]=(m[t]||0)+1;store.set(k,m)}
 
-    // Copy contract
-    document.getElementById('copyBtn').addEventListener('click', () => {
-      const text = CONTRACT_ADDRESS;
-      navigator.clipboard.writeText(text).then(()=>{
-        const btn = document.getElementById('copyBtn');
-        const old = btn.textContent;
-        btn.textContent = 'Copied!';
-        setTimeout(()=>btn.textContent = old, 1200);
-      });
-    });
+  function updateCooldown(){if(getPlays()>=1){cooldownEl.textContent="Played today. Come back after 00:00 UTC.";startBtn.disabled=true}else{cooldownEl.textContent="";startBtn.disabled=false}}
 
-    /* ==========================
-       PHANTOM WALLET CONNECT
-       ========================== */
-    const connectBtn = document.getElementById('connectBtn');
-    const walletCard = document.getElementById('walletCard');
-    const walletAddrEl = document.getElementById('walletAddr');
-    const walletStatusEl = document.getElementById('walletStatus');
-    const signBtn = document.getElementById('signBtn');
-
-    let provider = null;
-    let publicKey = null;
-    let isSigned = false;
-
-    const fmt = (pk) => pk ? (pk.slice(0,4)+'...'+pk.slice(-4)) : '—';
-
-    async function connectWallet(){
-      provider = window.solana;
-      if(!provider || !provider.isPhantom){
-        alert('Phantom not found. Install https://phantom.app');
-        return;
-      }
-      try{
-        const resp = await provider.connect();
-        publicKey = resp.publicKey?.toString() || null;
-        if(publicKey){
-          walletCard.classList.add('show');
-          walletAddrEl.textContent = fmt(publicKey);
-          walletStatusEl.textContent = 'Connected (not signed)';
-          connectBtn.textContent = 'Connected';
-          connectBtn.disabled = true;
-          // preload best score for this wallet
-          document.getElementById('bestScore').textContent = getBestScore();
-          updateCooldown();
-        }
-      }catch(e){ console.error(e); }
-    }
-
-    async function signIn(){
-      if(!provider || !publicKey){ alert('Connect wallet first.'); return; }
-      const message = `Sign in to $MOJO Jungle\\nAddress: ${publicKey}\\nNonce: ${crypto.getRandomValues(new Uint32Array(1))[0]}`;
-      const encoded = new TextEncoder().encode(message);
-      try{
-        const res = await provider.signMessage(encoded,'utf8');
-        if(res?.signature){
-          isSigned = true;
-          walletStatusEl.textContent = 'Signed ✓';
-          alert('Signed! Welcome to the jungle.');
-        }
-      }catch(e){
-        alert('Signature declined.');
-      }
-    }
-
-    connectBtn.addEventListener('click', connectWallet);
-    signBtn.addEventListener('click', signIn);
-
-    // Auto-connect if trusted before
-    window.addEventListener('load', async () => {
-      if(window.solana?.isPhantom){
-        try{
-          const resp = await window.solana.connect({ onlyIfTrusted:true });
-          publicKey = resp.publicKey?.toString() || null;
-          if(publicKey){
-            walletCard.classList.add('show');
-            walletAddrEl.textContent = fmt(publicKey);
-            walletStatusEl.textContent = 'Connected (not signed)';
-            connectBtn.textContent = 'Connected';
-            connectBtn.disabled = true;
-            document.getElementById('bestScore').textContent = getBestScore();
-            updateCooldown();
-          }
-        }catch{}
-      }
-    });
-
-    /* ==========================
-       BANANA DASH (1 play/day)
-       ========================== */
-    const startBtn = document.getElementById('startBtn');
-    const playArea = document.getElementById('playArea');
-    const timeLeftEl = document.getElementById('timeLeft');
-    const scoreEl = document.getElementById('score');
-    const bestScoreEl = document.getElementById('bestScore');
-    const cooldownEl = document.getElementById('cooldown');
-    const shareBtn = document.getElementById('shareBtn');
-
-    const GAME_DURATION = 20; // seconds
-    const DAILY_LIMIT = 1;
-
-    const store = {
-      get(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d } catch{ return d } },
-      set(k,v){ localStorage.setItem(k, JSON.stringify(v)) }
-    };
-    const perWalletKey = (base) => `${base}:${publicKey || 'guest'}`;
-    const todayKey = () => {
-      const d=new Date();
-      return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
-    };
-    const getPlaysToday = () => {
-      const m = store.get(perWalletKey('plays'), {});
-      return m[todayKey()] || 0;
-    };
-    const incPlaysToday = () => {
-      const k = perWalletKey('plays');
-      const m = store.get(k, {});
-      const t = todayKey();
-      m[t] = (m[t]||0) + 1;
-      store.set(k, m);
-    };
-    const getBestScore = () => store.get(perWalletKey('bestScore'), 0);
-    const setBestScore = (v) => store.set(perWalletKey('bestScore'), Number(v||0));
-
-    let timer=null, spawnTimer=null, timeLeft=GAME_DURATION, score=0;
-
-    function updateCooldown(){
-      const plays = getPlaysToday();
-      if(plays >= DAILY_LIMIT){
-        cooldownEl.textContent = 'Already played today. Come back after 00:00 UTC.';
-        startBtn.disabled = true;
-      } else {
-        cooldownEl.textContent = '';
-        startBtn.disabled = false;
-      }
-    }
-
-    function startGame(){
-      if(!publicKey){ alert('Connect wallet first.'); return; }
-      if(!isSigned){ alert('Please click "Sign In (verify)" first.'); return; }
-      if(getPlaysToday() >= DAILY_LIMIT){ updateCooldown(); return; }
-
-      score = 0; scoreEl.textContent = '0';
-      timeLeft = GAME_DURATION; timeLeftEl.textContent = String(timeLeft);
-      startBtn.disabled = true;
-
-      playArea.querySelectorAll('.banana').forEach(b=>b.remove());
-      const hint = document.getElementById('hint'); if(hint) hint.remove();
-
-      timer = setInterval(()=>{
-        timeLeft -= 1;
-        timeLeftEl.textContent = String(timeLeft);
-        if(timeLeft <= 0){ endGame(); }
-      }, 1000);
-
-      spawnTimer = setInterval(spawnBanana, 600);
-      setTimeout(spawnBanana, 100);
-    }
-
-    function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
-
-    function spawnBanana(){
-      const rect = playArea.getBoundingClientRect();
-      const x = randInt(10, rect.width - 34);
-      const y = randInt(10, rect.height - 34);
-      const el = document.createElement('div');
-      el.className = 'banana';
-      el.textContent = '🍌';
-      el.style.left = x + 'px';
-      el.style.top = y + 'px';
-      el.style.transform = `scale(${(0.8 + Math.random()*0.6).toFixed(2)}) rotate(${randInt(-20,20)}deg)`;
-      playArea.appendChild(el);
-
-      const removeAfter = 1200 + Math.random()*800;
-      const killer = setTimeout(() => el.remove(), removeAfter);
-
-      el.addEventListener('click', () => {
-        clearTimeout(killer);
-        el.remove();
-        score += 1;
-        scoreEl.textContent = String(score);
-      }, { once:true });
-    }
-
-    function endGame(){
-      clearInterval(timer); timer=null;
-      clearInterval(spawnTimer); spawnTimer=null;
-      incPlaysToday();
-      updateCooldown();
-      const best = getBestScore();
-      if(score > best) setBestScore(score);
-      bestScoreEl.textContent = getBestScore();
-      alert(`Time! You scored ${score} 🍌`);
-      startBtn.disabled = false;
-    }
-
-    function copyShare(){
-      const txt = `$MOJO Banana Dash — ${publicKey ? (publicKey.slice(0,4)+'...'+publicKey.slice(-4)) : 'guest'} scored ${scoreEl.textContent} 🍌 in 20s! #MOJO #BananaArmy`;
-      navigator.clipboard.writeText(txt).then(()=> alert('Score copied!'));
-    }
-
-    startBtn.addEventListener('click', startGame);
-    shareBtn.addEventListener('click', copyShare);
-  </script>
+  function startGame(){
+    if(getPlays()>=1){updateCooldown();return;}
+    score=0;scoreEl.textContent=0;time=20;timeEl.textContent=time;
+    playArea.innerHTML='';timer=setInterval(tick,1000);spawner=setInterval(spawn,700);
+  }
+  function tick(){time--;timeEl.textContent=time;if(time<=0)end();}
+  function spawn(){const e=document.createElement('div');e.className='banana';e.textContent='🍌';e.style.left=Math.random()*(playArea.clientWidth-30)+'px';e.style.top=Math.random()*(playArea.clientHeight-30)+'px';playArea.appendChild(e);e.onclick=()=>{score++;scoreEl.textContent=score;e.remove()};setTimeout(()=>e.remove(),1200)}
+  function end(){clearInterval(timer);clearInterval(spawner);incPlays();if(score>getBest())setBest(score);bestScoreEl.textContent=getBest();alert("You scored "+score+" 🍌");updateCooldown();}
+  startBtn.onclick=startGame;
+  shareBtn.onclick=()=>{const txt=`$MOJO Banana Dash — ${fmt(publicKey)} scored ${score} 🍌`;navigator.clipboard.writeText(txt).then(()=>alert("Copied!"))}
+  updateCooldown();
+</script>
 </body>
 </html>
-
