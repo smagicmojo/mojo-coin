@@ -13,6 +13,9 @@
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="images/favicon.png" />
 
+  <!-- Solana web3.js (Phantom) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+
   <style>
     :root{
       --bg:#0c0c0f; --card:#141418; --ink:#ffffff; --muted:#b5b8c7;
@@ -31,7 +34,7 @@
     h1{font-size:44px;line-height:1.1;margin:8px 0 12px}
     .lead{color:var(--muted);font-size:18px;margin-bottom:18px}
     .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-    .btn{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-ink);padding:12px 16px;border-radius:10px;font-weight:800}
+    .btn{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-ink);padding:12px 16px;border-radius:10px;font-weight:800;border:0;cursor:pointer}
     .btn.secondary{background:transparent;border:1px solid var(--line);color:var(--ink)}
     .btn.good{background:var(--good);color:#09110b}
     .pill{display:inline-flex;gap:10px;align-items:center;background:#101015;border:1px dashed var(--line);padding:10px;border-radius:10px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
@@ -48,6 +51,19 @@
     .how{counter-reset:step} .how li{counter-increment:step}
     .how li::marker{content: counter(step) ". "}
     @media (max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
+
+    /* Wallet card */
+    .wallet-card{margin-top:14px;display:none}
+    .wallet-card.show{display:block}
+
+    /* Game styles */
+    .game-wrap{margin-top:18px}
+    .game-top{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:10px}
+    .play-area{position:relative;height:340px;border:1px dashed var(--line);border-radius:12px;overflow:hidden;background:
+      radial-gradient(1200px 300px at 50% -20%,rgba(255,216,77,.1),transparent),
+      linear-gradient(180deg,#101015,#0c0c0f)}
+    .banana{position:absolute;font-size:28px;cursor:pointer;user-select:none;filter:drop-shadow(0 3px 8px rgba(0,0,0,.4))}
+    .hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.7}
   </style>
 </head>
 <body>
@@ -58,12 +74,14 @@
       <span class="tag">Solana</span>
       <span class="tag">Meme</span>
     </div>
-    <div class="links">
+    <div class="links" style="display:flex;align-items:center;gap:12px">
       <a href="#buy">Buy</a>
       <a href="#chart">Chart</a>
       <a href="#tokenomics">Tokenomics</a>
       <a href="#roadmap">Roadmap</a>
       <a href="#community">Community</a>
+      <!-- NEW: Connect Wallet -->
+      <button id="connectBtn" class="btn">Connect Wallet</button>
     </div>
   </header>
 
@@ -80,10 +98,20 @@
         <button class="btn secondary" id="copyBtn" style="margin-left:auto">Copy</button>
       </div>
 
+      <!-- NEW: Wallet info card -->
+      <div id="walletCard" class="card wallet-card">
+        <div><strong>Wallet:</strong> <span id="walletAddr">—</span></div>
+        <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+          <button id="signBtn" class="btn secondary">Sign In (verify)</button>
+          <span id="walletStatus" class="tag">Disconnected</span>
+        </div>
+      </div>
+
       <div class="cta">
         <a class="btn good" id="buyNow" href="#" target="_blank" rel="noopener">Buy on Pump.fun</a>
         <a class="btn secondary" id="chartBtn" href="#" target="_blank" rel="noopener">View Live Chart</a>
         <a class="btn secondary" href="#tokenomics">Tokenomics</a>
+        <a class="btn secondary" href="#game">Play Game</a>
       </div>
 
       <div class="kpis">
@@ -98,6 +126,7 @@
     </div>
   </main>
 
+  <!-- Your sections (unchanged) -->
   <section class="wrap section" id="about">
     <h2 class="sec-title">What is $MOJO?</h2>
     <div class="grid">
@@ -134,8 +163,6 @@
         <li>Dexscreener: <a id="dexLink" href="#" target="_blank" rel="noopener">Coming soon</a></li>
         <li>Birdeye: <a id="birdLink" href="#" target="_blank" rel="noopener">Coming soon</a></li>
       </ul>
-      <!-- Optional embed (replace src after launch) -->
-      <!-- <iframe src="https://dexscreener.com/solana/PASTE_TOKEN_ADDRESS" style="width:100%;height:480px;border:0;border-radius:12px"></iframe> -->
     </div>
   </section>
 
@@ -180,18 +207,39 @@
   <section class="wrap section" id="community">
     <h2 class="sec-title">Community</h2>
     <div class="card" style="display:flex;flex-wrap:wrap;gap:10px;align-items:center">
-      <a class="btn" href="https://t.me/mojo_coin1" target="_blank" rel="noopener">Join Telegram</a>
-      <a class="btn secondary" href="https://x.com/magicmojocoin?s=11" target="_blank" rel="noopener">Follow on X</a>
+      <a class="btn" href="https://t.me/your_mojo_group" target="_blank" rel="noopener">Join Telegram</a>
+      <a class="btn secondary" href="https://x.com/your_mojo_handle" target="_blank" rel="noopener">Follow on X</a>
       <span class="tag">#MOJO</span><span class="tag">#Solana</span><span class="tag">#memecoin</span>
     </div>
   </section>
 
+  <!-- NEW: GAME SECTION -->
+  <section class="wrap section" id="game">
+    <h2 class="sec-title">Banana Dash 🍌</h2>
+    <div class="card game-wrap">
+      <div class="game-top">
+        <div><b>Time:</b> <span id="timeLeft">—</span>s</div>
+        <div><b>Score:</b> <span id="score">0</span></div>
+        <div><b>Best (this wallet):</b> <span id="bestScore">0</span></div>
+      </div>
+      <div id="playArea" class="play-area">
+        <div id="hint" class="hint">Press Start — catch bananas! 🍌</div>
+      </div>
+      <div class="cta" style="margin-top:12px">
+        <button id="startBtn" class="btn">Start (1 play/day)</button>
+        <button id="shareBtn" class="btn secondary">Copy Score</button>
+      </div>
+      <p id="cooldown" class="muted" style="margin-top:8px"></p>
+    </div>
+    <p class="muted" style="margin-top:10px">No keys collected. No fees. Sign a message only to verify ownership. Scores saved locally per wallet.</p>
+  </section>
+
   <footer class="wrap foot">
-    © <span id="y"></span> $MOJO. This is a community-driven meme project. DYOR.
+    ©️ <span id="y"></span> $MOJO. This is a community-driven meme project. DYOR.
   </footer>
 
   <script>
-    // Update year
+    // YEAR
     document.getElementById('y').textContent = new Date().getFullYear();
 
     // QUICK SETUP: Paste your links after launch ↓
@@ -217,10 +265,198 @@
         setTimeout(()=>btn.textContent = old, 1200);
       });
     });
+
+    /* ==========================
+       PHANTOM WALLET CONNECT
+       ========================== */
+    const connectBtn = document.getElementById('connectBtn');
+    const walletCard = document.getElementById('walletCard');
+    const walletAddrEl = document.getElementById('walletAddr');
+    const walletStatusEl = document.getElementById('walletStatus');
+    const signBtn = document.getElementById('signBtn');
+
+    let provider = null;
+    let publicKey = null;
+    let isSigned = false;
+
+    const fmt = (pk) => pk ? (pk.slice(0,4)+'...'+pk.slice(-4)) : '—';
+
+    async function connectWallet(){
+      provider = window.solana;
+      if(!provider || !provider.isPhantom){
+        alert('Phantom not found. Install https://phantom.app');
+        return;
+      }
+      try{
+        const resp = await provider.connect();
+        publicKey = resp.publicKey?.toString() || null;
+        if(publicKey){
+          walletCard.classList.add('show');
+          walletAddrEl.textContent = fmt(publicKey);
+          walletStatusEl.textContent = 'Connected (not signed)';
+          connectBtn.textContent = 'Connected';
+          connectBtn.disabled = true;
+          // preload best score for this wallet
+          document.getElementById('bestScore').textContent = getBestScore();
+          updateCooldown();
+        }
+      }catch(e){ console.error(e); }
+    }
+
+    async function signIn(){
+      if(!provider || !publicKey){ alert('Connect wallet first.'); return; }
+      const message = `Sign in to $MOJO Jungle\\nAddress: ${publicKey}\\nNonce: ${crypto.getRandomValues(new Uint32Array(1))[0]}`;
+      const encoded = new TextEncoder().encode(message);
+      try{
+        const res = await provider.signMessage(encoded,'utf8');
+        if(res?.signature){
+          isSigned = true;
+          walletStatusEl.textContent = 'Signed ✓';
+          alert('Signed! Welcome to the jungle.');
+        }
+      }catch(e){
+        alert('Signature declined.');
+      }
+    }
+
+    connectBtn.addEventListener('click', connectWallet);
+    signBtn.addEventListener('click', signIn);
+
+    // Auto-connect if trusted before
+    window.addEventListener('load', async () => {
+      if(window.solana?.isPhantom){
+        try{
+          const resp = await window.solana.connect({ onlyIfTrusted:true });
+          publicKey = resp.publicKey?.toString() || null;
+          if(publicKey){
+            walletCard.classList.add('show');
+            walletAddrEl.textContent = fmt(publicKey);
+            walletStatusEl.textContent = 'Connected (not signed)';
+            connectBtn.textContent = 'Connected';
+            connectBtn.disabled = true;
+            document.getElementById('bestScore').textContent = getBestScore();
+            updateCooldown();
+          }
+        }catch{}
+      }
+    });
+
+    /* ==========================
+       BANANA DASH (1 play/day)
+       ========================== */
+    const startBtn = document.getElementById('startBtn');
+    const playArea = document.getElementById('playArea');
+    const timeLeftEl = document.getElementById('timeLeft');
+    const scoreEl = document.getElementById('score');
+    const bestScoreEl = document.getElementById('bestScore');
+    const cooldownEl = document.getElementById('cooldown');
+    const shareBtn = document.getElementById('shareBtn');
+
+    const GAME_DURATION = 20; // seconds
+    const DAILY_LIMIT = 1;
+
+    const store = {
+      get(k,d){ try{ return JSON.parse(localStorage.getItem(k)) ?? d } catch{ return d } },
+      set(k,v){ localStorage.setItem(k, JSON.stringify(v)) }
+    };
+    const perWalletKey = (base) => `${base}:${publicKey || 'guest'}`;
+    const todayKey = () => {
+      const d=new Date();
+      return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+    };
+    const getPlaysToday = () => {
+      const m = store.get(perWalletKey('plays'), {});
+      return m[todayKey()] || 0;
+    };
+    const incPlaysToday = () => {
+      const k = perWalletKey('plays');
+      const m = store.get(k, {});
+      const t = todayKey();
+      m[t] = (m[t]||0) + 1;
+      store.set(k, m);
+    };
+    const getBestScore = () => store.get(perWalletKey('bestScore'), 0);
+    const setBestScore = (v) => store.set(perWalletKey('bestScore'), Number(v||0));
+
+    let timer=null, spawnTimer=null, timeLeft=GAME_DURATION, score=0;
+
+    function updateCooldown(){
+      const plays = getPlaysToday();
+      if(plays >= DAILY_LIMIT){
+        cooldownEl.textContent = 'Already played today. Come back after 00:00 UTC.';
+        startBtn.disabled = true;
+      } else {
+        cooldownEl.textContent = '';
+        startBtn.disabled = false;
+      }
+    }
+
+    function startGame(){
+      if(!publicKey){ alert('Connect wallet first.'); return; }
+      if(!isSigned){ alert('Please click "Sign In (verify)" first.'); return; }
+      if(getPlaysToday() >= DAILY_LIMIT){ updateCooldown(); return; }
+
+      score = 0; scoreEl.textContent = '0';
+      timeLeft = GAME_DURATION; timeLeftEl.textContent = String(timeLeft);
+      startBtn.disabled = true;
+
+      playArea.querySelectorAll('.banana').forEach(b=>b.remove());
+      const hint = document.getElementById('hint'); if(hint) hint.remove();
+
+      timer = setInterval(()=>{
+        timeLeft -= 1;
+        timeLeftEl.textContent = String(timeLeft);
+        if(timeLeft <= 0){ endGame(); }
+      }, 1000);
+
+      spawnTimer = setInterval(spawnBanana, 600);
+      setTimeout(spawnBanana, 100);
+    }
+
+    function randInt(min,max){ return Math.floor(Math.random()*(max-min+1))+min; }
+
+    function spawnBanana(){
+      const rect = playArea.getBoundingClientRect();
+      const x = randInt(10, rect.width - 34);
+      const y = randInt(10, rect.height - 34);
+      const el = document.createElement('div');
+      el.className = 'banana';
+      el.textContent = '🍌';
+      el.style.left = x + 'px';
+      el.style.top = y + 'px';
+      el.style.transform = `scale(${(0.8 + Math.random()*0.6).toFixed(2)}) rotate(${randInt(-20,20)}deg)`;
+      playArea.appendChild(el);
+
+      const removeAfter = 1200 + Math.random()*800;
+      const killer = setTimeout(() => el.remove(), removeAfter);
+
+      el.addEventListener('click', () => {
+        clearTimeout(killer);
+        el.remove();
+        score += 1;
+        scoreEl.textContent = String(score);
+      }, { once:true });
+    }
+
+    function endGame(){
+      clearInterval(timer); timer=null;
+      clearInterval(spawnTimer); spawnTimer=null;
+      incPlaysToday();
+      updateCooldown();
+      const best = getBestScore();
+      if(score > best) setBestScore(score);
+      bestScoreEl.textContent = getBestScore();
+      alert(`Time! You scored ${score} 🍌`);
+      startBtn.disabled = false;
+    }
+
+    function copyShare(){
+      const txt = `$MOJO Banana Dash — ${publicKey ? (publicKey.slice(0,4)+'...'+publicKey.slice(-4)) : 'guest'} scored ${scoreEl.textContent} 🍌 in 20s! #MOJO #BananaArmy`;
+      navigator.clipboard.writeText(txt).then(()=> alert('Score copied!'));
+    }
+
+    startBtn.addEventListener('click', startGame);
+    shareBtn.addEventListener('click', copyShare);
   </script>
 </body>
-
 </html>
-
-
-
