@@ -2,10 +2,11 @@
   "name": "Mojo Coin",
   "symbol": "MOJO",
   "description": "$MOJO — the coin with the magic mojo. Community-powered meme coin on Solana.",
-  "image": "https://smagicmojo.github.io/mojo-coin/assets/mojo.png",
+  "image": "https://smagicmojo.github.io/mojo-coin/mojo.png",
   "extensions": {
     "website": "https://smagicmojo.github.io/mojo-coin",
     "twitter": "https://x.com/magicmojocoin",
     "telegram": "https://t.me/mojo_coin1"
   }
+
 }
