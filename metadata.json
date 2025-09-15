@@ -1,45 +1,11 @@
 {
   "name": "Mojo Coin",
   "symbol": "MOJO",
-  "description": "$MOJO — the coin with the magic mojo. Community-powered meme coin on Solana.",
+  "description": "$MOJO — the coin with the magic mojo ✨🐒",
   "image": "https://smagicmojo.github.io/mojo-coin/mojo.png",
-  "seller_fee_basis_points": 0,
-  "attributes": [
-    {
-      "trait_type": "Category",
-      "value": "Meme Coin"
-    },
-    {
-      "trait_type": "Theme",
-      "value": "Jungle Vibes"
-    },
-    {
-      "trait_type": "Chain",
-      "value": "Solana"
-    }
-  ],
-  "properties": {
-    "files": [
-      {
-        "uri": "https://smagicmojo.github.io/mojo-coin/mojo.png",
-        "type": "image/png"
-      }
-    ],
-    "category": "image",
-    "creators": [
-      {
-        "address": "6ZFYSu71ETmohgUiqFxhEoSQ8WqgR3HZrm4dZMCQRVUf",
-        "share": 100
-      }
-    ]
-  },
   "extensions": {
     "website": "https://smagicmojo.github.io/mojo-coin",
     "twitter": "https://x.com/magicmojocoin",
     "telegram": "https://t.me/mojo_coin1"
-  },
-  "collection": {
-    "name": "Mojo Family",
-    "family": "Mojo Coin Jungle"
   }
 }
