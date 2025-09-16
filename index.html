@@ -8,6 +8,14 @@
     <meta name="description"
         content="$MOJO is the coin with the magic mojo on Solana. Fun community, fast vibes, and meme-fueled momentum." />
     <link rel="icon" href="images/favicon.png" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js"></script>
+    <script>
+  // expose Buffer like in Node
+     window.Buffer = window.Buffer || window.buffer?.Buffer;
+  // a few libs also expect these:
+      window.global = window;                     // polyfill global
+       window.process = window.process || { env:{} };
+</script>
 
     <!-- Solana web3.js -->
     <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
@@ -670,3 +678,4 @@
 </body>
 
 </html>
+
