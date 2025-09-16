@@ -1,229 +1,659 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>$MOJO — The coin with the magic mojo</title>
-  <meta name="description" content="$MOJO is the coin with the magic mojo on Solana. Fun community, fast vibes, and meme-fueled momentum." />
-  <meta property="og:title" content="$MOJO — The coin with the magic mojo" />
-  <meta property="og:description" content="Join the $MOJO army. Meme, raid, pump. Solana speed, jungle energy." />
-  <meta property="og:image" content="images/mojo-social.png" />
-  <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <link rel="icon" href="images/favicon.png" />
-  <script defer src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
-  <style>
-    :root{
-      --bg:#0c0c0f; --card:#141418; --ink:#ffffff; --muted:#b5b8c7;
-      --accent:#ffd84d; --accent-ink:#141418; --line:#22222a; --good:#2ad37f;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100%;scroll-behavior:smooth;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui}
-    a{color:var(--accent);text-decoration:none} a:hover{opacity:.9}
-    .wrap{max-width:1080px;margin:0 auto;padding:24px}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 0}
-    .nav img{height:44px}
-    .nav .links a{margin-left:16px;font-weight:600}
-    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:28px;align-items:center;padding:26px 0}
-    .hero .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px}
-    .badge{display:inline-block;background:var(--accent);color:var(--accent-ink);padding:6px 12px;border-radius:999px;font-weight:700;margin-bottom:12px}
-    h1{font-size:44px;line-height:1.1;margin:8px 0 12px}
-    .lead{color:var(--muted);font-size:18px;margin-bottom:18px}
-    .cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
-    .btn{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:var(--accent-ink);padding:12px 16px;border-radius:10px;font-weight:800;border:0;cursor:pointer}
-    .btn.secondary{background:transparent;border:1px solid var(--line);color:var(--ink)}
-    .btn.good{background:var(--good);color:#09110b}
-    .pill{display:inline-flex;gap:10px;align-items:center;background:#101015;border:1px dashed var(--line);padding:10px;border-radius:10px;color:var(--muted);font-family:ui-monospace}
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-    .section{padding:40px 0;border-top:1px solid var(--line)}
-    .sec-title{font-size:26px;margin:0 0 14px}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px}
-    .kpis{display:flex;flex-wrap:wrap;gap:14px;margin-top:14px}
-    .kpi{flex:1 1 160px;background:#101015;border:1px solid var(--line);border-radius:12px;padding:12px}
-    .kpi b{font-size:22px}
-    .foot{padding:28px 0;color:var(--muted);text-align:center}
-    .tag{display:inline-block;background:#101015;border:1px solid var(--line);padding:4px 10px;border-radius:999px;color:var(--muted);font-size:13px;margin:4px 6px 0 0}
-    @media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr}}
-    /* Wallet + game */
-    .wallet-card{margin-top:14px;display:none}
-    .wallet-card.show{display:block}
-    .game-wrap{margin-top:18px}
-    .game-top{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:10px}
-    .play-area{position:relative;height:340px;border:1px dashed var(--line);border-radius:12px;overflow:hidden;background:radial-gradient(1200px 300px at 50% -20%,rgba(255,216,77,.1),transparent),linear-gradient(180deg,#101015,#0c0c0f)}
-    .banana{position:absolute;font-size:28px;cursor:pointer;user-select:none}
-    .hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.7}
-    /* Countdown */
-    #countdownCard {text-align:center; font-size:1.8em; font-weight:bold; padding:28px; margin-top:20px;}
-    #timer {font-size:2.2em; margin-top:12px; color:var(--accent);}
-  </style>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>$MOJO — Presale</title>
+    <meta name="description" content="$MOJO — the coin with the magic mojo on Solana." />
+    <link rel="icon" href="images/favicon.png" />
+    <!-- Solana web3.js (must load) -->
+    <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+    <style>
+        :root {
+            --bg: #0b1110;
+            --ink: #eaf4ef;
+            --muted: #9fb0a9;
+            --card: #0f1616;
+            --line: #21322e;
+            --accent: #22c55e;
+            --accent2: #16a34a;
+            --accent-ink: #07110b;
+            --yellow: #ffd84d;
+            --yellow-ink: #141418;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font: 16px/1.55 Inter, system-ui, Segoe UI, Roboto
+        }
+
+        a {
+            color: var(--yellow);
+            text-decoration: none
+        }
+
+        a:hover {
+            opacity: .9
+        }
+
+        .wrap {
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 24px
+        }
+
+        /* NAV */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0
+        }
+
+        .brand {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        .brand img {
+            height: 44px;
+            width: 44px;
+            border-radius: 8px;
+            object-fit: cover
+        }
+
+        .links {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            flex-wrap: wrap
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            padding: 12px 16px;
+            font-weight: 800;
+            cursor: pointer;
+            background: #121b1a;
+            color: var(--ink)
+        }
+
+        .btn.primary {
+            background: var(--accent);
+            border-color: var(--accent2);
+            color: var(--accent-ink)
+        }
+
+        .btn.ghost {
+            background: transparent
+        }
+
+        /* HERO */
+        .hero {
+            position: relative;
+            border: 1px solid var(--line);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-top: 6px;
+            background: linear-gradient(180deg, #0e2a1f 0%, #0b1412 100%);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, .35)
+        }
+
+        .hero-inner {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 24px;
+            align-items: center;
+            padding: 36px
+        }
+
+        .vines {
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1600&auto=format&fit=crop') center/cover no-repeat;
+            opacity: .22;
+            mix-blend-mode: overlay
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 48px;
+            line-height: 1.08
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--yellow);
+            color: var(--yellow-ink);
+            font-weight: 900;
+            padding: 6px 12px;
+            border-radius: 999px;
+            margin-bottom: 12px
+        }
+
+        .lead {
+            color: var(--muted);
+            font-size: 18px;
+            max-width: 56ch;
+            margin: 8px 0 18px
+        }
+
+        .cta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        /* CARDS */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 18px
+        }
+
+        /* STATUS (small ribbon under title) */
+        .status {
+            padding: 8px 10px;
+            border-radius: 10px;
+            margin: 12px 0 0;
+            font-size: 14px;
+            display: inline-flex;
+            gap: 8px;
+            align-items: center
+        }
+
+        .ok {
+            background: #0f2b1f;
+            border: 1px solid #1f623f
+        }
+
+        .bad {
+            background: #2b0f13;
+            border: 1px solid #80333f
+        }
+
+        /* PRESALE */
+        .ps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px
+        }
+
+        .stat {
+            background: #0b1211;
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            padding: 12px
+        }
+
+        .label {
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .val {
+            font-weight: 900;
+            font-size: 18px
+        }
+
+        .bar {
+            height: 12px;
+            background: #0a0f0e;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 6px
+        }
+
+        .fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent2), #34d399)
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px
+        }
+
+        .input {
+            flex: 1;
+            background: #0a110f;
+            border: 1px solid var(--line);
+            color: var(--ink);
+            border-radius: 12px;
+            padding: 14px 16px;
+            font-size: 16px
+        }
+
+        .note {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 6px
+        }
+
+        /* ROADMAP */
+        .section {
+            padding: 46px 0
+        }
+
+        .title {
+            font-size: 28px;
+            margin: 0 0 14px
+        }
+
+        .timeline {
+            display: grid;
+            gap: 14px
+        }
+
+        .step {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 14px;
+            align-items: start
+        }
+
+        .step .when {
+            font-weight: 900;
+            color: #bfe6d3
+        }
+
+        .bullet {
+            width: 10px;
+            height: 10px;
+            border-radius: 999px;
+            background: var(--accent);
+            display: inline-block;
+            margin-right: 8px
+        }
+
+        .kp {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .tag {
+            padding: 6px 10px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: #101613;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        /* WHITEPAPER */
+        .wp-img {
+            width: 100%;
+            max-width: 960px;
+            border-radius: 12px;
+            border: 1px solid var(--line)
+        }
+
+        /* FOOT */
+        .foot {
+            color: var(--muted);
+            text-align: center;
+            padding: 26px 0;
+            border-top: 1px solid var(--line);
+            margin-top: 30px
+        }
+
+        /* LOADING OVERLAY */
+        #loading {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(6, 10, 10, .55);
+            z-index: 50
+        }
+
+        .spinner {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 5px solid rgba(255, 255, 255, .15);
+            border-top-color: #7bffc2;
+            animation: spin 1s linear infinite
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg)
+            }
+        }
+
+        /* Responsive */
+        @media(max-width:980px) {
+            .hero-inner {
+                grid-template-columns: 1fr;
+                padding: 24px
+            }
+
+            h1 {
+                font-size: 36px
+            }
+        }
+    </style>
 </head>
+
 <body>
-<header class="wrap nav">
-  <div style="display:flex;align-items:center;gap:12px">
-    <img src="mojo-logo.jpeg" alt="$MOJO logo" />
-    <strong>$MOJO</strong>
-    <span class="tag">Solana</span><span class="tag">Meme</span>
-  </div>
-  <div class="links">
-    <a href="#buy">Buy</a>
-    <a href="#chart">Chart</a>
-    <a href="#tokenomics">Tokenomics</a>
-    <a href="#roadmap">Roadmap</a>
-    <a href="#community">Community</a>
-    <a href="https://t.me/mojo_coin1" target="_blank">Telegram</a>
-    <a href="https://x.com/magicmojocoin" target="_blank">X</a>
-    <button id="connectBtn" class="btn">Connect Wallet</button>
-  </div>
-</header>
-
-<main class="wrap hero">
-  <div class="card">
-    <span class="badge">The coin with the magic mojo ✨</span>
-    <h1>Meet <span style="color:var(--accent)">$MOJO</span> — jungle energy on Solana 🐒</h1>
-    <p class="lead">Fast vibes. Fun memes. Community pumped. Grab your MOJO and let’s send it to the moon.</p>
-
-    <div class="pill" id="contractBox">
-      <span>Contract:</span>
-      <code id="contract">COMING-SOON</code>
-      <button class="btn secondary" id="copyBtn">Copy</button>
+    <!-- Loading overlay -->
+    <div id="loading">
+        <div class="spinner" aria-label="Loading"></div>
     </div>
 
-    <!-- Wallet info -->
-    <div id="walletCard" class="card wallet-card">
-      <div><strong>Wallet:</strong> <span id="walletAddr">—</span></div>
-      <div style="margin-top:8px;display:flex;gap:8px">
-        <button id="signBtn" class="btn secondary">Sign In</button>
-        <span id="walletStatus" class="tag">Disconnected</span>
-      </div>
-    </div>
+    <header class="wrap nav">
+        <div class="brand">
+            <img src="mojo-logo.jpeg" alt="MOJO logo" />
+            <strong>$MOJO</strong><span class="tag">Solana</span><span class="tag">Meme</span>
+        </div>
+        <div class="links">
+            <a href="#presale">Presale</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#whitepaper">Whitepaper</a>
+            <a href="https://smagicmojo.github.io/mojo-coin" target="_blank">Website</a>
+            <a href="https://x.com/magicmojocoin" target="_blank">X</a>
+            <a href="https://t.me/mojo_coin1" target="_blank">Telegram</a>
+            <button id="connectBtn" class="btn primary">Connect Wallet</button>
+        </div>
+    </header>
 
-    <div class="cta">
-      <a class="btn good" id="buyNow" href="#" target="_blank">Buy on Pump.fun</a>
-      <a class="btn secondary" id="chartBtn" href="#" target="_blank">View Chart</a>
-      <a class="btn secondary" href="#game">Play Game</a>
-    </div>
+    <!-- HERO + PRESALE -->
+    <section class="wrap hero">
+        <div class="vines"></div>
+        <div class="hero-inner">
+            <div>
+                <span class="badge">The coin with the magic mojo ✨</span>
+                <h1>Unleash <span style="color:#7BFFB3">$MOJO</span> — jungle energy on Solana 🐒</h1>
+                <p class="lead">Buy with SOL. Funds go straight to the treasury. After the presale, contributors receive
+                    <b>$MOJO</b>. Transparent. Fast. Community-first.</p>
+                <div id="jsStatus" class="status bad">JS not started yet…</div>
+                <div id="walletStatus" class="status bad">Wallet: not checked</div>
+                <div class="cta" style="margin-top:12px">
+                    <a class="btn" href="#presale">Join Presale</a>
+                    <a class="btn ghost" href="#whitepaper">Read Whitepaper</a>
+                </div>
+            </div>
 
-    <!-- Countdown -->
-    <div id="countdownCard" class="card">
-      <div>🚀 Launch Countdown</div>
-      <div id="timer">Loading...</div>
-    </div>
+            <!-- PRESALE CARD -->
+            <div id="presale" class="card">
+                <h2 style="margin:0 0 8px">Presale</h2>
+                <div class="ps-grid">
+                    <div class="stat">
+                        <div class="label">Raised</div>
+                        <div class="val"><span id="raised">0.00</span> SOL</div>
+                        <div class="bar">
+                            <div id="barfill" class="fill"></div>
+                        </div>
+                        <div class="note"><span id="pct">0.0</span>% of <span id="target">0</span> SOL • $<span
+                                id="usd">0</span></div>
+                    </div>
+                    <div class="stat">
+                        <div class="label">Price</div>
+                        <div class="val">1 SOL = <span id="perSol">0</span> $MOJO</div>
+                        <div class="note">Auto-calculates tokens</div>
+                    </div>
+                    <div class="stat">
+                        <div class="label">Limits</div>
+                        <div class="val"><span id="min">0</span>–<span id="max">0</span> SOL</div>
+                        <div class="note">Per transaction</div>
+                    </div>
+                </div>
 
-  </div>
+                <div class="row">
+                    <input id="amount" class="input" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*"
+                        placeholder="Amount in SOL" />
+                    <button id="buyBtn" class="btn primary" type="button">Buy</button>
+                </div>
+                <div class="note">You’ll approve a SOL transfer to the treasury. <b>Mainnet</b> only.</div>
 
-  <div class="card">
-    <img src="hero-mascot.png" alt="MOJO mascot" style="width:100%;border-radius:12px" />
-  </div>
-</main>
+                <div class="row">
+                    <div class="stat" style="flex:1">
+                        <div class="label">You’ll receive</div>
+                        <div class="val"><span id="willGet">0</span> $MOJO</div>
+                    </div>
+                    <div style="flex:1">
+                        <div id="result" class="note"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- /PRESALE -->
+        </div>
+    </section>
 
-<!-- GAME -->
-<section class="wrap section" id="game">
-  <h2 class="sec-title">Banana Dash 🍌</h2>
-  <div class="card game-wrap">
-    <div class="game-top">
-      <div><b>Time:</b> <span id="timeLeft">—</span>s</div>
-      <div><b>Score:</b> <span id="score">0</span></div>
-      <div><b>Best:</b> <span id="bestScore">0</span></div>
-    </div>
-    <div id="playArea" class="play-area">
-      <div id="hint" class="hint">Press Start — catch bananas! 🍌</div>
-    </div>
-    <div class="cta" style="margin-top:12px">
-      <button id="startBtn" class="btn">Start</button>
-      <button id="shareBtn" class="btn secondary">Copy Score</button>
-    </div>
-    <p id="cooldown" class="muted"></p>
-  </div>
-</section>
+    <!-- ROADMAP -->
+    <section id="roadmap" class="wrap section">
+        <h2 class="title">Roadmap</h2>
+        <div class="timeline">
+            <div class="step">
+                <div class="when">Q3 2025</div>
+                <div>
+                    <div><span class="bullet"></span> Presale launch + community bootstrapping</div>
+                    <div class="kp">
+                        <span class="tag">Website v1</span><span class="tag">Token Minted</span><span
+                            class="tag">Whitepaper</span>
+                    </div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="when">Q4 2025</div>
+                <div>
+                    <div><span class="bullet"></span> Raydium listing + initial CEX outreach</div>
+                    <div class="kp">
+                        <span class="tag">Liquidity</span><span class="tag">CMC/CG Listings</span><span
+                            class="tag">Marketing Push</span>
+                    </div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="when">Q1 2026</div>
+                <div>
+                    <div><span class="bullet"></span> Utility reveal: MOJO perks + partnerships</div>
+                    <div class="kp">
+                        <span class="tag">Staking (explore)</span><span class="tag">Community Grants</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<section class="wrap section" id="community">
-  <h2 class="sec-title">Community</h2>
-  <div class="card" style="display:flex;gap:10px;flex-wrap:wrap">
-    <a class="btn" href="https://t.me/mojo_coin1" target="_blank">Join Telegram</a>
-    <a class="btn secondary" href="https://x.com/magicmojocoin" target="_blank">Follow on X</a>
-  </div>
-</section>
+    <!-- WHITEPAPER -->
+    <section id="whitepaper" class="wrap section">
+        <h2 class="title">Whitepaper</h2>
+        <p class="note">Replace <code>whitepaper.png</code> with your PNG — same filename — and it will render below.
+        </p>
+        <div class="card" style="text-align:center">
+            <img class="wp-img" src="whitepaper.png" alt="MOJO Whitepaper" />
+        </div>
+    </section>
 
-<footer class="wrap foot">
-  ©️ <span id="y"></span> $MOJO. DYOR.
-</footer>
+    <footer class="wrap foot">
+        Treasury: <span id="treasuryShort"></span> • Network: Mainnet-Beta • © <span id="y"></span> $MOJO
+    </footer>
 
-<script>
-  document.getElementById('y').textContent = new Date().getFullYear();
+    <script>
+        (function () {
+            document.getElementById('y').textContent = new Date().getFullYear();
 
-  /* ===== WALLET CONNECT ===== */
-  const connectBtn=document.getElementById('connectBtn');
-  const signBtn=document.getElementById('signBtn');
-  const walletCard=document.getElementById('walletCard');
-  const walletAddr=document.getElementById('walletAddr');
-  const walletStatus=document.getElementById('walletStatus');
-  let provider=null, publicKey=null, isSigned=false;
-  const fmt=pk=>pk?pk.slice(0,4)+'...'+pk.slice(-4):'guest';
+            /* ====== CONFIG ====== */
+            const TREASURY = "3rJbVUjfeUoSDh9RGh2ijJYCdaWW28iqy47saqAbUCVx"; // your SOL receiver
+            const PRICE_TOKENS_PER_SOL = 2_000_000;  // 1 SOL = 2,000,000 MOJO
+            const TARGET_SOL = 200;                   // goal
+            const BASELINE_SOL = 0.00;                // treasury balance before presale
+            const MIN_SOL = 0.1;
+            const MAX_SOL = 3;
+            const RPC_ENDPOINT = "https://api.mainnet-beta.solana.com";
+            const COINGECKO = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
+            /* ===================== */
 
-  async function connectWallet(){
-    provider=window.solana;
-    if(!provider||!provider.isPhantom){alert("Open inside Phantom or install extension.");return;}
-    try{const resp=await provider.connect();publicKey=resp.publicKey?.toString();
-      walletCard.classList.add('show');walletAddr.textContent=fmt(publicKey);
-      walletStatus.textContent="Connected";connectBtn.textContent="Connected";connectBtn.disabled=true;
-      bestScoreEl.textContent=getBest();
-    }catch(e){console.error(e);}
-  }
-  async function signIn(){
-    if(!provider||!publicKey){alert("Connect wallet first");return;}
-    if(typeof provider.signMessage!=='function'){alert("Update Phantom or open in Phantom Browser (mobile)");return;}
-    const msg=`Sign in to $MOJO Jungle\nAddress: ${publicKey}\nNonce: ${crypto.getRandomValues(new Uint32Array(1))[0]}`;
-    const encoded=new TextEncoder().encode(msg);
-    try{const res=await provider.signMessage(encoded,'utf8');if(res?.signature){isSigned=true;walletStatus.textContent="Signed ✓";}}catch{}
-  }
-  connectBtn.addEventListener('click',connectWallet);
-  signBtn.addEventListener('click',signIn);
+            const { Connection, PublicKey, SystemProgram, Transaction, LAMPORTS_PER_SOL } = solanaWeb3;
+            const $ = id => document.getElementById(id);
+            const short = k => k.slice(0, 4) + "…" + k.slice(-4);
+            $("treasuryShort").textContent = short(TREASURY);
+            $("perSol").textContent = PRICE_TOKENS_PER_SOL.toLocaleString();
+            $("min").textContent = MIN_SOL; $("max").textContent = MAX_SOL;
+            $("target").textContent = TARGET_SOL;
 
-  /* ===== GAME ===== */
-  const startBtn=document.getElementById('startBtn');
-  const playArea=document.getElementById('playArea');
-  const timeEl=document.getElementById('timeLeft');
-  const scoreEl=document.getElementById('score');
-  const bestScoreEl=document.getElementById('bestScore');
-  const cooldownEl=document.getElementById('cooldown');
-  const shareBtn=document.getElementById('shareBtn');
-  let time=20,score=0,timer,spawner;
+            // Loading overlay helpers
+            const showLoading = (on) => { $("loading").style.display = on ? "flex" : "none"; };
 
-  function todayKey(){const d=new Date();return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;}
-  const store={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}},set(k,v){localStorage.setItem(k,JSON.stringify(v))}};
-  const perWalletKey=(b)=>`${b}:${publicKey||'guest'}`;
-  function getBest(){return store.get(perWalletKey('best'),0)}
-  function setBest(v){store.set(perWalletKey('best'),Number(v))}
-  function getPlays(){const m=store.get(perWalletKey('plays'),{});return m[todayKey()]||0}
-  function incPlays(){const k=perWalletKey('plays');const m=store.get(k,{});const t=todayKey();m[t]=(m[t]||0)+1;store.set(k,m)}
+            // Status helpers
+            function setJS(ok, msg) { $("jsStatus").className = "status " + (ok ? "ok" : "bad"); $("jsStatus").textContent = msg; }
+            function setWallet(msg, ok) { $("walletStatus").className = "status " + (ok ? "ok" : "bad"); $("walletStatus").textContent = "Wallet: " + msg; }
+            setJS(true, "JS running ✅");
 
-  function updateCooldown(){if(getPlays()>=1){cooldownEl.textContent="Played today. Come back after 00:00 UTC.";startBtn.disabled=true}else{cooldownEl.textContent="";startBtn.disabled=false}}
+            // Wallet detection
+            const detectProvider = () => window.phantom?.solana || window.solana || null;
 
-  function startGame(){
-    if(getPlays()>=1){updateCooldown();return;}
-    score=0;scoreEl.textContent=0;time=20;timeEl.textContent=time;
-    playArea.innerHTML='';timer=setInterval(tick,1000);spawner=setInterval(spawn,700);
-  }
-  function tick(){time--;timeEl.textContent=time;if(time<=0)end();}
-  function spawn(){const e=document.createElement('div');e.className='banana';e.textContent='🍌';e.style.left=Math.random()*(playArea.clientWidth-30)+'px';e.style.top=Math.random()*(playArea.clientHeight-30)+'px';playArea.appendChild(e);e.onclick=()=>{score++;scoreEl.textContent=score;e.remove()};setTimeout(()=>e.remove(),1200)}
-  function end(){clearInterval(timer);clearInterval(spawner);incPlays();if(score>getBest())setBest(score);bestScoreEl.textContent=getBest();alert("You scored "+score+" 🍌");updateCooldown();}
-  startBtn.onclick=startGame;
-  shareBtn.onclick=()=>{const txt=`$MOJO Banana Dash — ${fmt(publicKey)} scored ${score} 🍌`;navigator.clipboard.writeText(txt).then(()=>alert("Copied!"))}
-  updateCooldown();
+            // State
+            const state = {
+                provider: null,
+                pubkey: null,
+                connection: new Connection(RPC_ENDPOINT, "confirmed"),
+                treasury: new PublicKey(TREASURY),
+                solUsd: 0
+            };
 
-  /* ===== COUNTDOWN ===== */
-  const launchDate = new Date("Sep 23, 2025 18:00:00").getTime();
-  const timerEl = document.getElementById("timer");
-  setInterval(()=>{
-    const now=new Date().getTime();
-    const distance=launchDate-now;
-    if(distance<=0){timerEl.textContent="🚀 Launched!";return;}
-    const d=Math.floor(distance/(1000*60*60*24));
-    const h=Math.floor((distance%(1000*60*60*24))/(1000*60*60));
-    const m=Math.floor((distance%(1000*60*60))/(1000*60));
-    const s=Math.floor((distance%(1000*60))/1000);
-    timerEl.textContent=`${d}d ${h}h ${m}m ${s}s`;
-  },1000);
-</script>
+            async function checkWallet() {
+                const p = detectProvider();
+                if (!p) { setWallet("not detected ❌", false); return null; }
+                setWallet("detected ✅ (click Connect)", true);
+                return p;
+            }
+
+            // Connect button
+            $("connectBtn").addEventListener("click", async () => {
+                try {
+                    const p = await checkWallet();
+                    if (!p) return alert("No wallet. Install Phantom or open inside Phantom (mobile).");
+                    showLoading(true);
+                    const res = await p.connect({ onlyIfTrusted: false });
+                    state.provider = p;
+                    state.pubkey = new PublicKey((res?.publicKey || p.publicKey).toString());
+                    setWallet("connected: " + state.pubkey.toBase58(), true);
+                    $("connectBtn").textContent = "Connected"; $("connectBtn").disabled = true;
+                } catch (e) {
+                    setWallet("connect failed: " + (e.message || e), false);
+                    alert(e.message || e);
+                } finally { showLoading(false); }
+            });
+
+            // Live stats
+            async function loadSolPrice() {
+                try { const r = await fetch(COINGECKO); const j = await r.json(); state.solUsd = j?.solana?.usd || 0; } catch { }
+            }
+            function setProgress(raised) {
+                $("raised").textContent = raised.toFixed(2);
+                const pct = Math.max(0, Math.min(100, (raised / TARGET_SOL) * 100));
+                $("barfill").style.width = pct + "%";
+                $("pct").textContent = pct.toFixed(1);
+                if (state.solUsd) $("usd").textContent = Math.round(raised * state.solUsd).toLocaleString();
+            }
+            async function refreshRaised() {
+                try {
+                    const lamports = await state.connection.getBalance(state.treasury, "confirmed");
+                    const current = lamports / LAMPORTS_PER_SOL;
+                    const raised = Math.max(0, current - BASELINE_SOL);
+                    setProgress(raised);
+                } catch { }
+            }
+
+            // Amount -> tokens
+            $("amount").addEventListener("input", () => {
+                const raw = $("amount").value.trim().replace(",", ".");
+                const v = parseFloat(raw);
+                const tokens = !isNaN(v) && v > 0 ? Math.floor(v * PRICE_TOKENS_PER_SOL) : 0;
+                $("willGet").textContent = tokens.toLocaleString();
+            });
+
+            // Buy
+            $("buyBtn").addEventListener("click", async () => {
+                try {
+                    const p = detectProvider();
+                    if (!p) return alert("No wallet. Install Phantom or open inside Phantom (mobile).");
+                    if (!state.pubkey) {
+                        showLoading(true);
+                        const res = await p.connect({ onlyIfTrusted: false });
+                        state.provider = p;
+                        state.pubkey = new PublicKey((res?.publicKey || p.publicKey).toString());
+                        $("connectBtn").textContent = "Connected"; $("connectBtn").disabled = true;
+                        setWallet("connected: " + state.pubkey.toBase58(), true);
+                        showLoading(false);
+                    }
+
+                    const raw = $("amount").value.trim().replace(",", ".");
+                    const amountSol = parseFloat(raw);
+                    if (isNaN(amountSol) || amountSol <= 0) throw new Error("Enter a valid SOL amount.");
+                    if (amountSol < MIN_SOL) throw new Error(`Minimum is ${MIN_SOL} SOL.`);
+                    if (amountSol > MAX_SOL) throw new Error(`Maximum is ${MAX_SOL} SOL.`);
+
+                    const ix = SystemProgram.transfer({
+                        fromPubkey: state.pubkey,
+                        toPubkey: state.treasury,
+                        lamports: Math.round(amountSol * LAMPORTS_PER_SOL),
+                    });
+
+                    const { blockhash, lastValidBlockHeight } = await state.connection.getLatestBlockhash("confirmed");
+                    const tx = new Transaction({ recentBlockhash: blockhash, feePayer: state.pubkey }).add(ix);
+
+                    showLoading(true);
+                    let signature;
+                    if (state.provider.signAndSendTransaction) {
+                        ({ signature } = await state.provider.signAndSendTransaction(tx));
+                    } else {
+                        const signed = await state.provider.signTransaction(tx);
+                        signature = await state.connection.sendRawTransaction(signed.serialize());
+                    }
+                    $("result").innerHTML = `⏳ Submitted… <a target="_blank" href="https://explorer.solana.com/tx/${signature}">view</a>`;
+                    await state.connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, "confirmed");
+                    $("result").innerHTML = `✅ Success! <a target="_blank" href="https://explorer.solana.com/tx/${signature}">Explorer</a>`;
+                    $("amount").value = ""; $("willGet").textContent = "0";
+                    refreshRaised();
+                } catch (e) {
+                    $("result").textContent = "❌ " + (e.message || String(e));
+                    alert(e.message || e);
+                } finally {
+                    showLoading(false);
+                }
+            });
+
+            // Boot
+            (async () => {
+                await checkWallet();
+                await loadSolPrice();
+                await refreshRaised();
+                setInterval(refreshRaised, 10000);
+                setInterval(loadSolPrice, 60000);
+                // Eager connect if already authorized
+                const p = detectProvider();
+                if (p?.isConnected && p.publicKey) {
+                    state.provider = p; state.pubkey = new PublicKey(p.publicKey.toString());
+                    setWallet("connected (eager): " + state.pubkey.toBase58(), true);
+                    $("connectBtn").textContent = "Connected"; $("connectBtn").disabled = true;
+                }
+            })();
+        })();
+    </script>
 </body>
+
 </html>
