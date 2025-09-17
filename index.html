@@ -1,680 +1,371 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-    <title>$MOJO — The coin with the magic mojo</title>
-    <meta name="description"
-        content="$MOJO is the coin with the magic mojo on Solana. Fun community, fast vibes, and meme-fueled momentum." />
-    <link rel="icon" href="images/favicon.png" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+  <title>$MOJO — The coin with the magic mojo</title>
+  <meta name="description" content="$MOJO is the coin with the magic mojo on Solana. Fun community, fast vibes, and meme-fueled momentum."/>
+  <link rel="icon" href="images/favicon.png"/>
 
-    <!-- 0) Node-style globals first -->
-    <script>
-        window.global = window;
-        window.process = { env: { NODE_ENV: 'production' } };
-    </script>
+  <!-- 0) Node-style globals first (some libs look for these) -->
+  <script>
+    window.global = window;
+    window.process = { env: { NODE_ENV: 'production' } };
+  </script>
 
-    <!-- 1) Buffer polyfill (must be before web3.js) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js"></script>
-    <script>
-        (function () {
+  <!-- 1) Buffer polyfill (must complete before web3.js).
+         Use onload to *guarantee* Buffer is attached before next script runs.
+         v param busts Safari cache. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js?v=3"
+          onload="(function(){
             var B = (window.buffer && window.buffer.Buffer) || window.Buffer;
-            if (B) {
-                window.Buffer = B;
-                globalThis.Buffer = B; // important for Safari + ES modules
-            }
-        })();
-    </script>
+            if (B) { window.Buffer = B; globalThis.Buffer = B; }
+          })()"></script>
 
-    <!-- 2) Solana web3.js (load AFTER polyfills, no async/defer) -->
-    <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
+  <!-- 2) Solana web3.js AFTER Buffer (no async/defer) -->
+  <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js?v=3"></script>
 
-    <style>
-        :root {
-            --bg: #0c0c0f;
-            --card: #141418;
-            --ink: #ffffff;
-            --muted: #b5b8c7;
-            --accent: #ffd84d;
-            --accent-ink: #141418;
-            --line: #22222a;
-            --green: #22c55e;
-        }
-
-        * {
-            box-sizing: border-box
-        }
-
-        html,
-        body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--ink);
-            font: 16px/1.6 system-ui, Segoe UI, Inter
-        }
-
-        a {
-            color: var(--accent);
-            text-decoration: none
-        }
-
-        .wrap {
-            max-width: 1080px;
-            margin: 0 auto;
-            padding: 18px
-        }
-
-        /* NAV */
-        .nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 10px 0
-        }
-
-        .nav img {
-            height: 44px;
-            border-radius: 8px
-        }
-
-        .links {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap
-        }
-
-        .tag {
-            display: inline-block;
-            background: #101015;
-            border: 1px solid var(--line);
-            padding: 4px 10px;
-            border-radius: 999px;
-            color: var(--muted);
-            font-size: 13px
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--accent);
-            color: var(--accent-ink);
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-weight: 800;
-            border: 0;
-            cursor: pointer
-        }
-
-        .btn.secondary {
-            background: transparent;
-            border: 1px solid var(--line);
-            color: var(--ink)
-        }
-
-        .btn.good {
-            background: var(--green);
-            color: #06140b
-        }
-
-        /* HERO */
-        .hero {
-            display: grid;
-            grid-template-columns: 1.2fr .8fr;
-            gap: 24px;
-            align-items: center;
-            padding: 16px 0
-        }
-
-        .hero .card {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 16px;
-            padding: 18px
-        }
-
-        .badge {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--accent-ink);
-            padding: 6px 12px;
-            border-radius: 999px;
-            font-weight: 800;
-            margin-bottom: 10px
-        }
-
-        h1 {
-            margin: 6px 0 10px;
-            font-size: 44px;
-            line-height: 1.1
-        }
-
-        .lead {
-            color: var(--muted);
-            font-size: 18px;
-            margin-bottom: 14px
-        }
-
-        .cta {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px
-        }
-
-        .mono {
-            display: inline-flex;
-            gap: 10px;
-            align-items: center;
-            background: #101015;
-            border: 1px dashed var(--line);
-            padding: 8px 10px;
-            border-radius: 10px;
-            color: var(--muted);
-            font-family: ui-monospace
-        }
-
-        .hero img.mascot {
-            width: 100%;
-            border-radius: 12px
-        }
-
-        /* Sections */
-        .section {
-            padding: 34px 0;
-            border-top: 1px solid var(--line)
-        }
-
-        .sec-title {
-            font-size: 26px;
-            margin: 0 0 14px
-        }
-
-        .card {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 16px
-        }
-
-        /* Presale */
-        .ps-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px
-        }
-
-        .stat {
-            background: #101015;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 12px
-        }
-
-        .label {
-            color: var(--muted);
-            font-size: 12px
-        }
-
-        .val {
-            font-weight: 900;
-            font-size: 18px
-        }
-
-        .bar {
-            height: 12px;
-            background: #0a0f0e;
-            border: 1px solid var(--line);
-            border-radius: 999px;
-            overflow: hidden;
-            margin-top: 6px
-        }
-
-        .fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #16a34a, #34d399)
-        }
-
-        .row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-top: 10px
-        }
-
-        .input {
-            flex: 1;
-            background: #0a120f;
-            border: 1px solid var(--line);
-            color: var(--ink);
-            border-radius: 12px;
-            padding: 14px 16px;
-            font-size: 16px
-        }
-
-        .note {
-            color: var(--muted);
-            font-size: 13px;
-            margin-top: 6px
-        }
-
-        .status {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 6px 10px;
-            border-radius: 10px;
-            font-size: 14px
-        }
-
-        .ok {
-            background: #0f2b1f;
-            border: 1px solid #1f623f
-        }
-
-        .bad {
-            background: #2b0f13;
-            border: 1px solid #80333f
-        }
-
-        /* Roadmap */
-        .timeline {
-            display: grid;
-            gap: 12px
-        }
-
-        .step {
-            display: grid;
-            grid-template-columns: 120px 1fr;
-            gap: 12px
-        }
-
-        .when {
-            font-weight: 900;
-            color: #bfe6d3
-        }
-
-        /* Whitepaper Modal */
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 50
-        }
-
-        .modal.show {
-            display: flex
-        }
-
-        .modal-inner {
-            max-width: 94vw;
-            max-height: 90vh;
-            background: #0e0e11;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 10px;
-            position: relative
-        }
-
-        .modal img {
-            max-width: 90vw;
-            max-height: 76vh;
-            display: block;
-            border-radius: 8px
-        }
-
-        .modal .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px
-        }
-
-        .modal .controls button {
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--line);
-            background: #191922;
-            color: #fff;
-            font-weight: 800;
-            cursor: pointer
-        }
-
-        .modal .x {
-            position: absolute;
-            right: 6px;
-            top: 6px;
-            background: #2b2b33;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 6px 10px;
-            cursor: pointer
-        }
-
-        /* Responsive */
-        @media (max-width:900px) {
-            .hero {
-                grid-template-columns: 1fr
-            }
-
-            h1 {
-                font-size: 36px
-            }
-
-            .ps-grid {
-                grid-template-columns: 1fr
-            }
-        }
-    </style>
+  <style>
+    :root{
+      --bg:#0c0c0f; --card:#141418; --ink:#ffffff; --muted:#b5b8c7;
+      --accent:#ffd84d; --accent-ink:#141418; --line:#22222a; --green:#22c55e;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 system-ui,Segoe UI,Inter}
+    a{color:var(--accent);text-decoration:none}
+    .wrap{max-width:1080px;margin:0 auto;padding:18px}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0}
+    .nav img{height:44px;border-radius:8px}
+    .links{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .tag{display:inline-block;background:#101015;border:1px solid var(--line);padding:4px 10px;border-radius:999px;color:var(--muted);font-size:13px}
+    .btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-ink);padding:12px 16px;border-radius:10px;font-weight:800;border:0;cursor:pointer}
+    .btn.secondary{background:transparent;border:1px solid var(--line);color:var(--ink)}
+    .btn.good{background:var(--green);color:#06140b}
+    .hero{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:center;padding:16px 0}
+    .hero .card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+    .badge{display:inline-block;background:var(--accent);color:var(--accent-ink);padding:6px 12px;border-radius:999px;font-weight:800;margin-bottom:10px}
+    h1{margin:6px 0 10px;font-size:44px;line-height:1.1}
+    .lead{color:var(--muted);font-size:18px;margin-bottom:14px}
+    .cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .mono{display:inline-flex;gap:10px;align-items:center;background:#101015;border:1px dashed var(--line);padding:8px 10px;border-radius:10px;color:var(--muted);font-family:ui-monospace}
+    .hero img.mascot{width:100%;border-radius:12px}
+    .section{padding:34px 0;border-top:1px solid var(--line)}
+    .sec-title{font-size:26px;margin:0 0 14px}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+    .ps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .stat{background:#101015;border:1px solid var(--line);border-radius:12px;padding:12px}
+    .label{color:var(--muted);font-size:12px}
+    .val{font-weight:900;font-size:18px}
+    .bar{height:12px;background:#0a0f0e;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-top:6px}
+    .fill{height:100%;width:0%;background:linear-gradient(90deg,#16a34a,#34d399)}
+    .row{display:flex;gap:10px;align-items:center;margin-top:10px}
+    .input{flex:1;background:#0a120f;border:1px solid var(--line);color:var(--ink);border-radius:12px;padding:14px 16px;font-size:16px}
+    .note{color:var(--muted);font-size:13px;margin-top:6px}
+    .status{display:inline-block;margin-top:8px;padding:6px 10px;border-radius:10px;font-size:14px}
+    .ok{background:#0f2b1f;border:1px solid #1f623f}
+    .bad{background:#2b0f13;border:1px solid #80333f}
+    .timeline{display:grid;gap:12px}
+    .step{display:grid;grid-template-columns:120px 1fr;gap:12px}
+    .when{font-weight:900;color:#bfe6d3}
+    .modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:50}
+    .modal.show{display:flex}
+    .modal-inner{max-width:94vw;max-height:90vh;background:#0e0e11;border:1px solid var(--line);border-radius:12px;padding:10px;position:relative}
+    .modal img{max-width:90vw;max-height:76vh;display:block;border-radius:8px}
+    .modal .controls{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .modal .controls button{padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:#191922;color:#fff;font-weight:800;cursor:pointer}
+    .modal .x{position:absolute;right:6px;top:6px;background:#2b2b33;border:1px solid var(--line);border-radius:8px;padding:6px 10px;cursor:pointer}
+    @media (max-width:900px){
+      .hero{grid-template-columns:1fr}
+      h1{font-size:36px}
+      .ps-grid{grid-template-columns:1fr}
+    }
+  </style>
 </head>
-
 <body>
-    <header class="wrap nav">
-        <div style="display:flex;align-items:center;gap:10px">
-            <img src="mojo-logo.jpeg" alt="$MOJO logo" />
-            <strong>$MOJO</strong>
-            <span class="tag">Solana</span><span class="tag">Meme</span>
-        </div>
-        <div class="links">
-            <a href="#presale">Presale</a>
-            <a href="#roadmap">Roadmap</a>
-            <a href="#" id="openWP">Whitepaper</a>
-            <a href="https://x.com/magicmojocoin" target="_blank">X</a>
-            <a href="https://t.me/mojo_coin1" target="_blank">Telegram</a>
-            <button id="connectBtn" class="btn">Connect Wallet</button>
-        </div>
-    </header>
+<header class="wrap nav">
+  <div style="display:flex;align-items:center;gap:10px">
+    <img src="mojo-logo.jpeg" alt="$MOJO logo"/>
+    <strong>$MOJO</strong>
+    <span class="tag">Solana</span><span class="tag">Meme</span>
+  </div>
+  <div class="links">
+    <a href="#presale">Presale</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#" id="openWP">Whitepaper</a>
+    <a href="https://x.com/magicmojocoin" target="_blank">X</a>
+    <a href="https://t.me/mojo_coin1" target="_blank">Telegram</a>
+    <button id="connectBtn" class="btn">Connect Wallet</button>
+  </div>
+</header>
 
-    <main class="wrap hero">
-        <div>
-            <span class="badge">The coin with the magic mojo ✨</span>
-            <h1>Meet <span style="color:var(--accent)">$MOJO</span> — jungle energy on Solana 🐒</h1>
-            <p class="lead">Fast vibes. Fun memes. Community pumped. Grab your MOJO and let’s send it to the moon.</p>
+<main class="wrap hero">
+  <div>
+    <span class="badge">The coin with the magic mojo ✨</span>
+    <h1>Meet <span style="color:var(--accent)">$MOJO</span> — jungle energy on Solana 🐒</h1>
+    <p class="lead">Fast vibes. Fun memes. Community pumped. Grab your MOJO and let’s send it to the moon.</p>
 
-            <div class="mono">
-                <span>Contract:</span>
-                <code id="contract">COMING-SOON</code>
-                <button id="copyBtn" class="btn secondary" type="button">Copy</button>
-            </div>
-
-            <div class="cta">
-                <a class="btn good" href="#presale">Join Presale</a>
-                <button id="openWP2" class="btn secondary" type="button">Whitepaper</button>
-            </div>
-
-            <div class="card" style="margin-top:14px;text-align:center">
-                <div style="font-weight:900;">🚀 Launch Countdown</div>
-                <div id="timer" style="font-size:30px;color:var(--accent);margin-top:8px">Loading…</div>
-            </div>
-        </div>
-
-        <div class="card">
-            <img class="mascot" src="hero-mascot.png" alt="MOJO mascot" />
-        </div>
-    </main>
-
-    <section class="wrap section" id="presale">
-        <h2 class="sec-title">Presale</h2>
-        <div class="card">
-            <div class="ps-grid">
-                <div class="stat">
-                    <div class="label">Raised</div>
-                    <div class="val"><span id="raised">0.00</span> SOL</div>
-                    <div class="bar">
-                        <div id="barfill" class="fill"></div>
-                    </div>
-                    <div class="note"><span id="pct">0.0</span>% of <span id="target">0</span> SOL • $<span
-                            id="usd">0</span></div>
-                </div>
-                <div class="stat">
-                    <div class="label">Price</div>
-                    <div class="val">1 SOL = <span id="perSol">0</span> $MOJO</div>
-                    <div class="note">Auto-calculates tokens</div>
-                </div>
-                <div class="stat">
-                    <div class="label">Limits</div>
-                    <div class="val"><span id="min">0</span>–<span id="max">0</span> SOL</div>
-                    <div class="note">Per transaction</div>
-                </div>
-            </div>
-
-            <div class="row">
-                <input id="amount" class="input" inputmode="decimal" pattern="[0-9][.,]?[0-9]"
-                    placeholder="Amount in SOL" />
-                <button id="buyBtn" class="btn good" type="button">Buy</button>
-            </div>
-            <div class="note">You’ll approve a SOL transfer to the treasury (Mainnet).</div>
-
-            <div class="row">
-                <div class="stat" style="flex:1">
-                    <div class="label">You’ll receive</div>
-                    <div class="val"><span id="willGet">0</span> $MOJO</div>
-                </div>
-                <div style="flex:1">
-                    <div id="result" class="note"></div>
-                </div>
-            </div>
-
-            <div id="jsStatus" class="status bad">JS not started yet…</div>
-            <div id="walletStatus" class="status bad">Wallet: not checked</div>
-        </div>
-    </section>
-
-    <section class="wrap section" id="roadmap">
-        <h2 class="sec-title">Roadmap</h2>
-        <div class="timeline card">
-            <div class="step">
-                <div class="when">Q3 2025</div>
-                <div>• Presale launch • Community bootstrapping • Whitepaper</div>
-            </div>
-            <div class="step">
-                <div class="when">Q4 2025</div>
-                <div>• Raydium listing • CMC/CG listings • Marketing push</div>
-            </div>
-            <div class="step">
-                <div class="when">Q1 2026</div>
-                <div>• Utility reveal: MOJO perks + partnerships • Community grants</div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="wrap" style="padding:24px 0;color:var(--muted);border-top:1px solid var(--line)">
-        Treasury: <span id="treasuryShort"></span> • Network: Mainnet-Beta • © <span id="y"></span> $MOJO
-    </footer>
-
-    <!-- Whitepaper Modal -->
-    <div id="wpModal" class="modal" aria-hidden="true">
-        <div class="modal-inner">
-            <button id="wpClose" class="x" type="button">✕</button>
-            <img id="wpImg" src="" alt="Whitepaper page" />
-            <div class="controls">
-                <button id="prevWP" type="button">◀ Prev</button>
-                <div style="color:#cbd5e1">Page <span id="wpPage">1</span>/<span id="wpTotal">15</span></div>
-                <button id="nextWP" type="button">Next ▶</button>
-            </div>
-        </div>
+    <div class="mono">
+      <span>Contract:</span>
+      <code id="contract">COMING-SOON</code>
+      <button id="copyBtn" class="btn secondary" type="button">Copy</button>
     </div>
 
-    <script>
-        document.getElementById('y').textContent = new Date().getFullYear();
+    <div class="cta">
+      <a class="btn good" href="#presale">Join Presale</a>
+      <button id="openWP2" class="btn secondary" type="button">Whitepaper</button>
+    </div>
 
-        /* ========= CONFIG ========= */
-        const TREASURY = "3rJbVUjfeUoSDh9RGh2ijJYCdaWW28iqy47saqAbUCVx"; // receive SOL here
-        const PRICE_TOKENS_PER_SOL = 2_000_000;    // 1 SOL = this many MOJO
-        const TARGET_SOL = 200;
-        const BASELINE_SOL = 0.00;                 // treasury balance before presale
-        const MIN_SOL = 0.1;
-        const MAX_SOL = 3;
-        const RPC_ENDPOINT = "https://api.mainnet-beta.solana.com";
-        const COINGECKO = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
-        // Whitepaper files: whitepaper/1.png ... whitepaper/15.png
-        const WP_TOTAL = 15;
-        const WP_PATH = (i) => 'whitepaper / ${ i }.png';
-        /* ========================== */
+    <div class="card" style="margin-top:14px;text-align:center">
+      <div style="font-weight:900;">🚀 Launch Countdown</div>
+      <div id="timer" style="font-size:30px;color:var(--accent);margin-top:8px">Loading…</div>
+    </div>
+  </div>
 
-        /* ===== COUNTDOWN ===== */
-        const launchDate = new Date("Sep 23, 2025 18:00:00").getTime();
-        const timerEl = document.getElementById("timer");
-        setInterval(() => {
-            const now = Date.now(), d = launchDate - now;
-            if (d <= 0) { timerEl.textContent = "🚀 Launched!"; return; }
-            const dd = Math.floor(d / 86400000), hh = Math.floor(d % 86400000 / 3600000), mm = Math.floor(d % 3600000 / 60000), ss = Math.floor(d % 60000 / 1000);
-            //timerEl.textContent = '${ dd }d ${ hh }h ${ mm }m ${ ss } s';
-        }, 1000);
+  <div class="card">
+    <img class="mascot" src="hero-mascot.png" alt="MOJO mascot"/>
+  </div>
+</main>
 
-        /* ===== WHITEPAPER MODAL ===== */
-        const modal = document.getElementById('wpModal');
-        const img = document.getElementById('wpImg');
-        const pageEl = document.getElementById('wpPage');
-        const totalEl = document.getElementById('wpTotal'); totalEl.textContent = WP_TOTAL;
-        let page = 1;
-        function showWP(n) { page = ((n - 1 + WP_TOTAL) % WP_TOTAL) + 1; img.src = WP_PATH(page); pageEl.textContent = page; modal.classList.add('show'); modal.setAttribute('aria-hidden', 'false'); }
-        function hideWP() { modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true'); }
-        document.getElementById('openWP').onclick = () => showWP(1);
-        document.getElementById('openWP2').onclick = () => showWP(1);
-        document.getElementById('wpClose').onclick = hideWP;
-        document.getElementById('prevWP').onclick = () => showWP(page - 1);
-        document.getElementById('nextWP').onclick = () => showWP(page + 1);
-        modal.addEventListener('click', e => { if (e.target === modal) hideWP(); });
+<section class="wrap section" id="presale">
+  <h2 class="sec-title">Presale</h2>
+  <div class="card">
+    <div class="ps-grid">
+      <div class="stat">
+        <div class="label">Raised</div>
+        <div class="val"><span id="raised">0.00</span> SOL</div>
+        <div class="bar"><div id="barfill" class="fill"></div></div>
+        <div class="note"><span id="pct">0.0</span>% of <span id="target">0</span> SOL • $<span id="usd">0</span></div>
+      </div>
+      <div class="stat">
+        <div class="label">Price</div>
+        <div class="val">1 SOL = <span id="perSol">0</span> $MOJO</div>
+        <div class="note">Auto-calculates tokens</div>
+      </div>
+      <div class="stat">
+        <div class="label">Limits</div>
+        <div class="val"><span id="min">0</span>–<span id="max">0</span> SOL</div>
+        <div class="note">Per transaction</div>
+      </div>
+    </div>
 
-        /* ===== PRESALE / WALLET ===== */
-        const { Connection, PublicKey, SystemProgram, Transaction, LAMPORTS_PER_SOL } = solanaWeb3;
-        const $ = id => document.getElementById(id);
-        const short = k => k.slice(0, 4) + '…' + k.slice(-4);
+    <div class="row">
+      <input id="amount" class="input" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" placeholder="Amount in SOL"/>
+      <button id="buyBtn" class="btn good" type="button">Buy</button>
+    </div>
+    <div class="note">You’ll approve a SOL transfer to the treasury (Mainnet).</div>
 
-        $('treasuryShort').textContent = short(TREASURY);
-        $('perSol').textContent = PRICE_TOKENS_PER_SOL.toLocaleString();
-        $('min').textContent = MIN_SOL; $('max').textContent = MAX_SOL;
-        $('target').textContent = TARGET_SOL;
+    <div class="row">
+      <div class="stat" style="flex:1">
+        <div class="label">You’ll receive</div>
+        <div class="val"><span id="willGet">0</span> $MOJO</div>
+      </div>
+      <div style="flex:1">
+        <div id="result" class="note"></div>
+      </div>
+    </div>
 
-        const setJS = (ok, msg) => { $('jsStatus').className = 'status ' + (ok ? 'ok' : 'bad'); $('jsStatus').textContent = msg; };
-        const setWallet = (msg, ok) => { $('walletStatus').className = 'status ' + (ok ? 'ok' : 'bad'); $('walletStatus').textContent = 'Wallet: ' + msg; };
-        setJS(true, 'JS running ✅');
+    <div id="jsStatus" class="status bad">JS not started yet…</div>
+    <div id="walletStatus" class="status bad">Wallet: not checked</div>
+  </div>
+</section>
 
-        const detectProvider = () => window.phantom?.solana || window.solana || null;
+<section class="wrap section" id="roadmap">
+  <h2 class="sec-title">Roadmap</h2>
+  <div class="timeline card">
+    <div class="step"><div class="when">Q3 2025</div><div>• Presale launch • Community bootstrapping • Whitepaper</div></div>
+    <div class="step"><div class="when">Q4 2025</div><div>• Raydium listing • CMC/CG listings • Marketing push</div></div>
+    <div class="step"><div class="when">Q1 2026</div><div>• Utility reveal: MOJO perks + partnerships • Community grants</div></div>
+  </div>
+</section>
 
-        const state = {
-            provider: null,
-            pubkey: null,
-            connection: new Connection(RPC_ENDPOINT, 'confirmed'),
-            treasury: new PublicKey(TREASURY),
-            solUsd: 0
-        };
+<footer class="wrap" style="padding:24px 0;color:var(--muted);border-top:1px solid var(--line)">
+  Treasury: <span id="treasuryShort"></span> • Network: Mainnet-Beta • © <span id="y"></span> $MOJO
+</footer>
 
-        async function loadSolPrice() {
-            try { const r = await fetch(COINGECKO); const j = await r.json(); state.solUsd = j?.solana?.usd || 0; } catch { }
-        }
-        function setProgress(raised) {
-            $('raised').textContent = raised.toFixed(2);
-            const pct = Math.max(0, Math.min(100, (raised / TARGET_SOL) * 100));
-            $('barfill').style.width = pct + '%';
-            $('pct').textContent = pct.toFixed(1);
-            if (state.solUsd) $('usd').textContent = Math.round(raised * state.solUsd).toLocaleString();
-        }
-        async function refreshRaised() {
-            try {
-                const lamports = await state.connection.getBalance(state.treasury, 'confirmed');
-                const current = lamports / LAMPORTS_PER_SOL;
-                const raised = Math.max(0, current - BASELINE_SOL);
-                setProgress(raised);
-            } catch { }
-        }
+<!-- Whitepaper Modal -->
+<div id="wpModal" class="modal" aria-hidden="true">
+  <div class="modal-inner">
+    <button id="wpClose" class="x" type="button">✕</button>
+    <img id="wpImg" src="" alt="Whitepaper page"/>
+    <div class="controls">
+      <button id="prevWP" type="button">◀ Prev</button>
+      <div style="color:#cbd5e1">Page <span id="wpPage">1</span>/<span id="wpTotal">15</span></div>
+      <button id="nextWP" type="button">Next ▶</button>
+    </div>
+  </div>
+</div>
 
-        // Connect
-        $('connectBtn').addEventListener('click', async () => {
-            try {
-                const p = detectProvider();
-                if (!p) { setWallet('not detected ❌', false); return alert('Open inside Phantom or install extension.'); }
-                const res = await p.connect({ onlyIfTrusted: false });
-                state.provider = p;
-                state.pubkey = new PublicKey((res?.publicKey || p.publicKey).toString());
-                $('connectBtn').textContent = 'Connected'; $('connectBtn').disabled = true;
-                setWallet('connected: ' + state.pubkey.toBase58(), true);
-            } catch (e) { setWallet('connect failed: ' + (e.message || e), false); alert(e.message || e); }
-        });
+<script>
+  document.getElementById('y').textContent = new Date().getFullYear();
 
-        // Amount → tokens
-        $('amount').addEventListener('input', () => {
-            const v = parseFloat($('amount').value.trim().replace(',', '.'));
-            const t = !isNaN(v) && v > 0 ? Math.floor(v * PRICE_TOKENS_PER_SOL) : 0;
-            $('willGet').textContent = t.toLocaleString();
-        });
+  /* ========= CONFIG ========= */
+  const TREASURY   = "3rJbVUjfeUoSDh9RGh2ijJYCdaWW28iqy47saqAbUCVx"; // receive SOL here
+  const PRICE_TOKENS_PER_SOL = 2_000_000;    // 1 SOL = this many MOJO
+  const TARGET_SOL = 200;
+  const BASELINE_SOL = 0.00;                 // treasury balance before presale
+  const MIN_SOL = 0.1;
+  const MAX_SOL = 3;
+  const RPC_ENDPOINT = "https://api.mainnet-beta.solana.com";
+  const COINGECKO    = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
+  const WP_TOTAL = 15;
+  const WP_PATH = (i)=>`whitepaper/${i}.png`;
 
-        // Buy
-        $('buyBtn').addEventListener('click', async () => {
-            try {
-                const p = detectProvider();
-                if (!p) return alert('Open inside Phantom (mobile) or install extension.');
-                if (!state.pubkey) {
-                    const res = await p.connect({ onlyIfTrusted: false });
-                    state.provider = p;
-                    state.pubkey = new PublicKey((res?.publicKey || p.publicKey).toString());
-                    $('connectBtn').textContent = 'Connected'; $('connectBtn').disabled = true;
-                    setWallet('connected: ' + state.pubkey.toBase58(), true);
-                }
-                const sol = parseFloat($('amount').value.trim().replace(',', '.'));
-                if (isNaN(sol) || sol <= 0) throw new Error('Enter a valid SOL amount.');
-                if (sol < MIN_SOL) throw new Error('Minimum is ${ MIN_SOL } SOL.');
-                if (sol > MAX_SOL) throw new Error('Maximum is ${ MAX_SOL } SOL.');
+  /* ===== COUNTDOWN ===== */
+  const launchDate = new Date("Sep 23, 2025 18:00:00").getTime();
+  const timerEl = document.getElementById("timer");
+  setInterval(()=>{
+    const now=Date.now(), d=launchDate-now;
+    if(d<=0){ timerEl.textContent="🚀 Launched!"; return; }
+    const dd=Math.floor(d/86400000), hh=Math.floor(d%86400000/3600000), mm=Math.floor(d%3600000/60000), ss=Math.floor(d%60000/1000);
+    timerEl.textContent = `${dd}d ${hh}h ${mm}m ${ss}s`;
+  },1000);
 
-                const ix = SystemProgram.transfer({
-                    fromPubkey: state.pubkey,
-                    toPubkey: state.treasury,
-                    lamports: Math.round(sol * LAMPORTS_PER_SOL),
-                });
+  /* ===== WHITEPAPER MODAL ===== */
+  const modal = document.getElementById('wpModal');
+  const img   = document.getElementById('wpImg');
+  const pageEl= document.getElementById('wpPage');
+  const totalEl=document.getElementById('wpTotal'); totalEl.textContent=WP_TOTAL;
+  let page=1;
+  function showWP(n){ page=((n-1+WP_TOTAL)%WP_TOTAL)+1; img.src=WP_PATH(page); pageEl.textContent=page; modal.classList.add('show'); modal.setAttribute('aria-hidden','false'); }
+  function hideWP(){ modal.classList.remove('show'); modal.setAttribute('aria-hidden','true'); }
+  document.getElementById('openWP').onclick = ()=>showWP(1);
+  document.getElementById('openWP2').onclick = ()=>showWP(1);
+  document.getElementById('wpClose').onclick = hideWP;
+  document.getElementById('prevWP').onclick = ()=>showWP(page-1);
+  document.getElementById('nextWP').onclick = ()=>showWP(page+1);
+  modal.addEventListener('click',e=>{ if(e.target===modal) hideWP(); });
 
-                const { blockhash, lastValidBlockHeight } = await state.connection.getLatestBlockhash('confirmed');
-                const tx = new Transaction({ recentBlockhash: blockhash, feePayer: state.pubkey }).add(ix);
+  /* ===== PRESALE / WALLET ===== */
+  const { Connection, PublicKey, SystemProgram, Transaction, LAMPORTS_PER_SOL } = solanaWeb3;
+  const $ = id=>document.getElementById(id);
+  const short = k => k.slice(0,4)+'…'+k.slice(-4);
 
-                let signature;
-                if (state.provider.signAndSendTransaction) {
-                    ({ signature } = await state.provider.signAndSendTransaction(tx));
-                } else {
-                    const signed = await state.provider.signTransaction(tx);
-                    signature = await state.connection.sendRawTransaction(signed.serialize());
-                }
-                $('result').innerHTML = '⏳ Submitted… <a target="_blank" href="https://explorer.solana.com/tx/${signature}">view</a>';
-                await state.connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, 'confirmed');
-                $('result').innerHTML = '✅ Success! < a target = "_blank" href = "https://explorer.solana.com/tx/${signature}" > Explorer</a >';
-                $('amount').value = ''; $('willGet').textContent = '0';
-                refreshRaised();
-            } catch (e) {
-                $('result').textContent = '❌ ' + (e.message || String(e));
-                alert(e.message || e);
-            }
-        });
+  $('treasuryShort').textContent = short(TREASURY);
+  $('perSol').textContent = PRICE_TOKENS_PER_SOL.toLocaleString();
+  $('min').textContent = MIN_SOL; $('max').textContent = MAX_SOL;
+  $('target').textContent = TARGET_SOL;
 
-        // Boot
-        (async () => {
-            await loadSolPrice();
-            await refreshRaised();
-            setInterval(refreshRaised, 10000);
-            setInterval(loadSolPrice, 60000);
-            const p = detectProvider();
-            if (p?.isConnected && p.publicKey) {
-                state.provider = p; state.pubkey = new PublicKey(p.publicKey.toString());
-                $('connectBtn').textContent = 'Connected'; $('connectBtn').disabled = true;
-                setWallet('connected (eager): ' + state.pubkey.toBase58(), true);
-            } else {
-                setWallet('not detected ❌ (open in Phantom)', false);
-            }
-        })();
+  const setJS = (ok,msg)=>{ $('jsStatus').className='status '+(ok?'ok':'bad'); $('jsStatus').textContent=msg; };
+  const setWallet = (msg,ok)=>{ $('walletStatus').className='status '+(ok?'ok':'bad'); $('walletStatus').textContent='Wallet: '+msg; };
+  setJS(true,'JS running ✅');
 
-        // Copy contract
-        document.getElementById('copyBtn').onclick = () => {
-            const t = document.getElementById('contract').textContent;
-            navigator.clipboard.writeText(t).then(() => alert('Copied'));
-        };
+  const detectProvider = ()=> window.phantom?.solana || window.solana || null;
 
-        // Footer treasury short
-        document.getElementById('treasuryShort').textContent = short(TREASURY);
-    </script>
+  const state = {
+    provider:null,
+    pubkey:null,
+    connection:new Connection(RPC_ENDPOINT,'confirmed'),
+    treasury:new PublicKey(TREASURY),
+    solUsd:0
+  };
+
+  async function loadSolPrice(){
+    try{ const r=await fetch(COINGECKO); const j=await r.json(); state.solUsd=j?.solana?.usd || 0; }catch{}
+  }
+  function setProgress(raised){
+    $('raised').textContent = raised.toFixed(2);
+    const pct = Math.max(0, Math.min(100, (raised/TARGET_SOL)*100));
+    $('barfill').style.width = pct + '%';
+    $('pct').textContent = pct.toFixed(1);
+    if(state.solUsd) $('usd').textContent = Math.round(raised*state.solUsd).toLocaleString();
+  }
+  async function refreshRaised(){
+    try{
+      const lamports = await state.connection.getBalance(state.treasury,'confirmed');
+      const current = lamports / LAMPORTS_PER_SOL;
+      const raised = Math.max(0, current - BASELINE_SOL);
+      setProgress(raised);
+    }catch{}
+  }
+
+  // Connect
+  $('connectBtn').addEventListener('click', async ()=>{
+    try{
+      const p = detectProvider();
+      if(!p){ setWallet('not detected ❌', false); return alert('Open inside Phantom or install extension.'); }
+      const res = await p.connect({ onlyIfTrusted:false });
+      state.provider = p;
+      state.pubkey = new PublicKey((res?.publicKey || p.publicKey).toString());
+      $('connectBtn').textContent='Connected'; $('connectBtn').disabled=true;
+      setWallet('connected: '+state.pubkey.toBase58(), true);
+    }catch(e){ setWallet('connect failed: '+(e.message||e), false); alert(e.message||e); }
+  });
+
+  // Amount → tokens
+  $('amount').addEventListener('input', ()=>{
+    const v = parseFloat($('amount').value.trim().replace(',','.'));
+    const t = !isNaN(v)&&v>0 ? Math.floor(v*PRICE_TOKENS_PER_SOL) : 0;
+    $('willGet').textContent = t.toLocaleString();
+  });
+
+  // Buy
+  $('buyBtn').addEventListener('click', async ()=>{
+    try{
+      const p = detectProvider();
+      if(!p) return alert('Open inside Phantom (mobile) or install extension.');
+      if(!state.pubkey){
+        const res = await p.connect({ onlyIfTrusted:false });
+        state.provider = p;
+        state.pubkey   = new PublicKey((res?.publicKey || p.publicKey).toString());
+        $('connectBtn').textContent='Connected'; $('connectBtn').disabled=true;
+        setWallet('connected: '+state.pubkey.toBase58(), true);
+      }
+      const sol = parseFloat($('amount').value.trim().replace(',','.'));
+      if(isNaN(sol)||sol<=0) throw new Error('Enter a valid SOL amount.');
+      if(sol<MIN_SOL) throw new Error(`Minimum is ${MIN_SOL} SOL.`);
+      if(sol>MAX_SOL) throw new Error(`Maximum is ${MAX_SOL} SOL.`);
+
+      const ix = SystemProgram.transfer({
+        fromPubkey: state.pubkey,
+        toPubkey: state.treasury,
+        lamports: Math.round(sol*LAMPORTS_PER_SOL),
+      });
+
+      const { blockhash, lastValidBlockHeight } = await state.connection.getLatestBlockhash('confirmed');
+      const tx = new Transaction({ recentBlockhash:blockhash, feePayer: state.pubkey }).add(ix);
+
+      let signature;
+      if(state.provider.signAndSendTransaction){
+        ({ signature } = await state.provider.signAndSendTransaction(tx));
+      }else{
+        const signed = await state.provider.signTransaction(tx);
+        signature = await state.connection.sendRawTransaction(signed.serialize());
+      }
+      $('result').innerHTML = `⏳ Submitted… <a target="_blank" href="https://explorer.solana.com/tx/${signature}">view</a>`;
+      await state.connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, 'confirmed');
+      $('result').innerHTML = `✅ Success! <a target="_blank" href="https://explorer.solana.com/tx/${signature}">Explorer</a>`;
+      $('amount').value=''; $('willGet').textContent='0';
+      refreshRaised();
+    }catch(e){
+      $('result').textContent = '❌ ' + (e.message || String(e));
+      alert(e.message || e);
+    }
+  });
+
+  // Boot
+  (async ()=>{
+    await loadSolPrice();
+    await refreshRaised();
+    setInterval(refreshRaised, 10000);
+    setInterval(loadSolPrice, 60000);
+    const p = detectProvider();
+    if(p?.isConnected && p.publicKey){
+      state.provider = p; state.pubkey = new PublicKey(p.publicKey.toString());
+      $('connectBtn').textContent='Connected'; $('connectBtn').disabled=true;
+      setWallet('connected (eager): '+state.pubkey.toBase58(), true);
+    }else{
+      setWallet('not detected ❌ (open in Phantom)', false);
+    }
+  })();
+
+  // Copy contract
+  document.getElementById('copyBtn').onclick = ()=>{
+    const t=document.getElementById('contract').textContent;
+    navigator.clipboard.writeText(t).then(()=>alert('Copied'));
+  };
+
+  // Footer treasury short
+  document.getElementById('treasuryShort').textContent = short(TREASURY);
+</script>
 </body>
-
 </html>
