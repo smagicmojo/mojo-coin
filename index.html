@@ -260,8 +260,8 @@
         // Helius RPC (replace YOUR_KEY if you want) — this one in the example is already set
         const RPC_ENDPOINT = "https://mainnet.helius-rpc.com/?api-key=c499522c-5d48-4559-99dc-be0cf108a0da";
         const COINGECKO = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
-        const WP_TOTAL = 16;
-        const WP_PATH = (i) > `whitepaper/${i}.png`;
+        const WP_TOTAL = 15;
+        const WP_PATH = (i) => `whitepaper/${i}.png`;
 
         // If a mint address is provided, show it in the UI
         if (TOKEN_MINT_ADDRESS && TOKEN_MINT_ADDRESS !== "PASTE_YOUR_MINT_ADDRESS_HERE") {
@@ -474,4 +474,5 @@
 </body>
 
 </html>
+
 
