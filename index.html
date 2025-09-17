@@ -10,12 +10,34 @@
     <link rel="icon" href="images/favicon.png" />
 
     <!-- ✅ Full Buffer Polyfill -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js"></script>
+  <!-- 1) Polyfills (MUST load before web3.js) -->
 <script>
-  window.global = window;
-  window.process = { env: { NODE_ENV: 'production' } };
-  window.Buffer = Buffer;   // ✅ use the global Buffer from the polyfill
-  globalThis.Buffer = Buffer;
+  // Ensure globalThis exists everywhere
+  (function(){ if(!window.globalThis){ window.globalThis = window; } })();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js"></script>
+<script>
+  (function () {
+    // Prefer globalThis (what web3.js uses)
+    const g = globalThis;
+
+    // Some CDNs expose g.buffer.Buffer; others may expose g.Buffer directly
+    if (!g.Buffer && g.buffer && g.buffer.Buffer) g.Buffer = g.buffer.Buffer;
+    if (!g.Buffer && typeof Buffer !== 'undefined') g.Buffer = Buffer;
+
+    // Final fallback: throw a clear error early if Buffer still missing
+    if (!g.Buffer) {
+      console.error('Buffer polyfill failed to load');
+      throw new Error('Buffer is not available — check buffer.min.js path');
+    }
+
+    // Common globals some libs expect
+    if (!g.global) g.global = g;
+    if (!g.process) g.process = { env: {} };
+
+    // Debug (remove later if you want)
+    // console.log('Buffer ready?', !!g.Buffer, 'buffer pkg?', !!g.buffer);
+  })();
 </script>
     <!-- ✅ Solana web3.js -->
     <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
@@ -662,4 +684,5 @@
 </body>
 
 </html>
+
 
