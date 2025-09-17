@@ -9,29 +9,16 @@
         content="$MOJO is the coin with the magic mojo on Solana. Fun community, fast vibes, and meme-fueled momentum." />
     <link rel="icon" href="images/favicon.png" />
 
-    <!-- ✅ Minimal Node globals + Buffer shim -->
+    <!-- ✅ Full Buffer Polyfill -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js"></script>
     <script>
-        (function () {
-            window.global = window;
-            window.process = window.process || { env: { NODE_ENV: 'production' } };
-
-            if (typeof window.Buffer === 'undefined') {
-                function utf8ToBytes(str) { return new TextEncoder().encode(String(str)); }
-                function from(input, enc) {
-                    if (input instanceof Uint8Array) return new Uint8Array(input);
-                    if (Array.isArray(input)) return new Uint8Array(input);
-                    if (typeof input === 'string') return utf8ToBytes(input);
-                    return utf8ToBytes(String(input));
-                }
-                function alloc(n) { return new Uint8Array(n | 0); }
-                function isBuffer(v) { return v instanceof Uint8Array; }
-                window.Buffer = globalThis.Buffer = { from, alloc, isBuffer };
-            }
-        })();
+        window.global = window;
+        window.process = { env: { NODE_ENV: 'production' } };
+        window.Buffer = buffer.Buffer;   // full polyfill
     </script>
 
-    <!-- Solana web3.js -->
-    <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js?v=5"></script>
+    <!-- ✅ Solana web3.js -->
+    <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
 
 
     <style>
@@ -508,11 +495,13 @@
         const BASELINE_SOL = 0.00;
         const MIN_SOL = 0.1;
         const MAX_SOL = 3;
-        // ✅ FIXED: use Ankr RPC (no 403)
-        const RPC_ENDPOINT = "https://rpc.ankr.com/solana";
+        // ✅ FIXED: Helius RPC (replace YOUR_KEY)
+        const RPC_ENDPOINT = "https://mainnet.helius-rpc.com/?api-key=c499522c-5d48-4559-99dc-be0cf108a0da";
         const COINGECKO = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
         const WP_TOTAL = 15;
         const WP_PATH = (i) => `whitepaper/${i}.png`;
+
+
         /* ===== COUNTDOWN ===== */
         const launchDate = new Date("Sep 23, 2025 18:00:00").getTime();
         const timerEl = document.getElementById("timer");
