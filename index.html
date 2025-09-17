@@ -251,7 +251,7 @@
         const TOKEN_MINT_ADDRESS = "PASTE_YOUR_MINT_ADDRESS_HERE"; // <-- replace with your mint address
 
         // Treasury: where SOL contributions land
-        const TREASURY = "3rJbVUjfeUoSDh9RGh2ijJYCdaWW28iqy47saqAbUCVx"; // receive SOL here
+        const TREASURY = "CFodiZ4kRdzx57LHeBbrVixaWz5Sh4YNkiZyqXG4UfVF"; // receive SOL here
         const PRICE_TOKENS_PER_SOL = 2_000_000;
         const TARGET_SOL = 200;
         const BASELINE_SOL = 0.00;
@@ -264,7 +264,7 @@
         const WP_PATH = (i) => `whitepaper/${i}.png`;
 
         // If a mint address is provided, show it in the UI
-        if (TOKEN_MINT_ADDRESS && TOKEN_MINT_ADDRESS !== "PASTE_YOUR_MINT_ADDRESS_HERE") {
+        if (TOKEN_MINT_ADDRESS && TOKEN_MINT_ADDRESS !== "3rJbVUjfeUoSDh9RGh2ijJYCdaWW28iqy47saqAbUCVx") {
             document.getElementById('contract').textContent = TOKEN_MINT_ADDRESS;
         } else {
             document.getElementById('contract').textContent = 'COMING-SOON';
@@ -474,3 +474,4 @@
 </body>
 
 </html>
+
