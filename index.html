@@ -5,43 +5,61 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
     <title>$MOJO — The coin with the magic mojo</title>
-    <meta name="description"
-        content="$MOJO is the coin with the magic mojo on Solana. Fun community, fast vibes, and meme-fueled momentum." />
+    <meta name="description" content="$MOJO is the coin with the magic mojo on Solana. Fun community, fast vibes, and meme-fueled momentum." />
     <link rel="icon" href="images/favicon.png" />
 
-    <!-- ✅ Full Buffer Polyfill -->
-  <!-- 1) Polyfills (MUST load before web3.js) -->
-<script>
-  // Ensure globalThis exists everywhere
-  (function(){ if(!window.globalThis){ window.globalThis = window; } })();
-</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js"></script>
-<script>
-  (function () {
-    // Prefer globalThis (what web3.js uses)
-    const g = globalThis;
+    <!-- Buffer polyfill + robust global setup (must run BEFORE Solana web3) -->
+    <script>
+      // Ensure globalThis exists
+      (function(){ if(!window.globalThis){ window.globalThis = window; } })();
+    </script>
+    <!-- Buffer library (exposes `buffer` on window) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js"></script>
+    <script>
+      (function () {
+        const g = globalThis;
 
-    // Some CDNs expose g.buffer.Buffer; others may expose g.Buffer directly
-    if (!g.Buffer && g.buffer && g.buffer.Buffer) g.Buffer = g.buffer.Buffer;
-    if (!g.Buffer && typeof Buffer !== 'undefined') g.Buffer = Buffer;
+        // Try multiple ways to expose Buffer as a global for libs that expect it
+        try {
+          if (!g.Buffer) {
+            if (g.buffer && g.buffer.Buffer) g.Buffer = g.buffer.Buffer;
+            else if (typeof Buffer !== 'undefined') g.Buffer = Buffer;
+          }
+        } catch (e) {
+          /* ignore */
+        }
 
-    // Final fallback: throw a clear error early if Buffer still missing
-    if (!g.Buffer) {
-      console.error('Buffer polyfill failed to load');
-      throw new Error('Buffer is not available — check buffer.min.js path');
-    }
+        // Final fallback: tiny shim (only provides Buffer.from for strings/arrays) —
+        // this is only to avoid `Buffer is not defined` errors in constrained browsers.
+        if (!g.Buffer) {
+          g.Buffer = {
+            from: function (input, enc) {
+              if (typeof input === 'string') {
+                if (enc === 'hex') {
+                  const len = input.length / 2;
+                  const out = new Uint8Array(len);
+                  for (let i = 0; i < len; i++) out[i] = parseInt(input.substr(i * 2, 2), 16);
+                  return out;
+                }
+                const t = new TextEncoder().encode(input);
+                return t;
+              }
+              if (Array.isArray(input) || input instanceof Uint8Array) return new Uint8Array(input);
+              return new Uint8Array();
+            },
+            isBuffer: function (b) { return b instanceof Uint8Array; }
+          };
+        }
 
-    // Common globals some libs expect
-    if (!g.global) g.global = g;
-    if (!g.process) g.process = { env: {} };
+        if (!g.global) g.global = g;
+        if (!g.process) g.process = { env: {} };
 
-    // Debug (remove later if you want)
-    // console.log('Buffer ready?', !!g.Buffer, 'buffer pkg?', !!g.buffer);
-  })();
-</script>
-    <!-- ✅ Solana web3.js -->
+        // debug: console.log('Buffer ready?', !!g.Buffer);
+      })();
+    </script>
+
+    <!-- ✅ Solana web3.js (IIFE build) -->
     <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js"></script>
-
 
     <style>
         :root {
@@ -55,327 +73,57 @@
             --green: #22c55e;
         }
 
-        * {
-            box-sizing: border-box
-        }
+        * { box-sizing: border-box }
 
-        html,
-        body {
-            margin: 0;
-            background: var(--bg);
-            color: var(--ink);
-            font: 16px/1.6 system-ui, Segoe UI, Inter
-        }
+        html, body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.6 system-ui, Segoe UI, Inter }
+        a { color: var(--accent); text-decoration: none }
 
-        a {
-            color: var(--accent);
-            text-decoration: none
-        }
-
-        .wrap {
-            max-width: 1080px;
-            margin: 0 auto;
-            padding: 18px
-        }
-
-        .nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 10px 0
-        }
-
-        .nav img {
-            height: 44px;
-            border-radius: 8px
-        }
-
-        .links {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            flex-wrap: wrap
-        }
-
-        .tag {
-            display: inline-block;
-            background: #101015;
-            border: 1px solid var(--line);
-            padding: 4px 10px;
-            border-radius: 999px;
-            color: var(--muted);
-            font-size: 13px
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--accent);
-            color: var(--accent-ink);
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-weight: 800;
-            border: 0;
-            cursor: pointer
-        }
-
-        .btn.secondary {
-            background: transparent;
-            border: 1px solid var(--line);
-            color: var(--ink)
-        }
-
-        .btn.good {
-            background: var(--green);
-            color: #06140b
-        }
-
-        .hero {
-            display: grid;
-            grid-template-columns: 1.2fr .8fr;
-            gap: 24px;
-            align-items: center;
-            padding: 16px 0
-        }
-
-        .hero .card {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 16px;
-            padding: 18px
-        }
-
-        .badge {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--accent-ink);
-            padding: 6px 12px;
-            border-radius: 999px;
-            font-weight: 800;
-            margin-bottom: 10px
-        }
-
-        h1 {
-            margin: 6px 0 10px;
-            font-size: 44px;
-            line-height: 1.1
-        }
-
-        .lead {
-            color: var(--muted);
-            font-size: 18px;
-            margin-bottom: 14px
-        }
-
-        .cta {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px
-        }
-
-        .mono {
-            display: inline-flex;
-            gap: 10px;
-            align-items: center;
-            background: #101015;
-            border: 1px dashed var(--line);
-            padding: 8px 10px;
-            border-radius: 10px;
-            color: var(--muted);
-            font-family: ui-monospace
-        }
-
-        .hero img.mascot {
-            width: 100%;
-            border-radius: 12px
-        }
-
-        .section {
-            padding: 34px 0;
-            border-top: 1px solid var(--line)
-        }
-
-        .sec-title {
-            font-size: 26px;
-            margin: 0 0 14px
-        }
-
-        .card {
-            background: var(--card);
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 16px
-        }
-
-        .ps-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px
-        }
-
-        .stat {
-            background: #101015;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 12px
-        }
-
-        .label {
-            color: var(--muted);
-            font-size: 12px
-        }
-
-        .val {
-            font-weight: 900;
-            font-size: 18px
-        }
-
-        .bar {
-            height: 12px;
-            background: #0a0f0e;
-            border: 1px solid var(--line);
-            border-radius: 999px;
-            overflow: hidden;
-            margin-top: 6px
-        }
-
-        .fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #16a34a, #34d399)
-        }
-
-        .row {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            margin-top: 10px
-        }
-
-        .input {
-            flex: 1;
-            background: #0a120f;
-            border: 1px solid var(--line);
-            color: var(--ink);
-            border-radius: 12px;
-            padding: 14px 16px;
-            font-size: 16px
-        }
-
-        .note {
-            color: var(--muted);
-            font-size: 13px;
-            margin-top: 6px
-        }
-
-        .status {
-            display: inline-block;
-            margin-top: 8px;
-            padding: 6px 10px;
-            border-radius: 10px;
-            font-size: 14px
-        }
-
-        .ok {
-            background: #0f2b1f;
-            border: 1px solid #1f623f
-        }
-
-        .bad {
-            background: #2b0f13;
-            border: 1px solid #80333f
-        }
-
-        .timeline {
-            display: grid;
-            gap: 12px
-        }
-
-        .step {
-            display: grid;
-            grid-template-columns: 120px 1fr;
-            gap: 12px
-        }
-
-        .when {
-            font-weight: 900;
-            color: #bfe6d3
-        }
-
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, .8);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 50
-        }
-
-        .modal.show {
-            display: flex
-        }
-
-        .modal-inner {
-            max-width: 94vw;
-            max-height: 90vh;
-            background: #0e0e11;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 10px;
-            position: relative
-        }
-
-        .modal img {
-            max-width: 90vw;
-            max-height: 76vh;
-            display: block;
-            border-radius: 8px
-        }
-
-        .modal .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 8px
-        }
-
-        .modal .controls button {
-            padding: 10px 14px;
-            border-radius: 10px;
-            border: 1px solid var(--line);
-            background: #191922;
-            color: #fff;
-            font-weight: 800;
-            cursor: pointer
-        }
-
-        .modal .x {
-            position: absolute;
-            right: 6px;
-            top: 6px;
-            background: #2b2b33;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            padding: 6px 10px;
-            cursor: pointer
-        }
+        .wrap { max-width: 1080px; margin: 0 auto; padding: 18px }
+        .nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 0 }
+        .nav img { height: 44px; border-radius: 8px }
+        .links { display: flex; gap: 12px; align-items: center; flex-wrap: wrap }
+        .tag { display: inline-block; background: #101015; border: 1px solid var(--line); padding: 4px 10px; border-radius: 999px; color: var(--muted); font-size: 13px }
+        .btn { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: var(--accent-ink); padding: 12px 16px; border-radius: 10px; font-weight: 800; border: 0; cursor: pointer }
+        .btn.secondary { background: transparent; border: 1px solid var(--line); color: var(--ink) }
+        .btn.good { background: var(--green); color: #06140b }
+        .hero { display: grid; grid-template-columns: 1.2fr .8fr; gap: 24px; align-items: center; padding: 16px 0 }
+        .hero .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 18px }
+        .badge { display: inline-block; background: var(--accent); color: var(--accent-ink); padding: 6px 12px; border-radius: 999px; font-weight: 800; margin-bottom: 10px }
+        h1 { margin: 6px 0 10px; font-size: 44px; line-height: 1.1 }
+        .lead { color: var(--muted); font-size: 18px; margin-bottom: 14px }
+        .cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px }
+        .mono { display: inline-flex; gap: 10px; align-items: center; background: #101015; border: 1px dashed var(--line); padding: 8px 10px; border-radius: 10px; color: var(--muted); font-family: ui-monospace }
+        .hero img.mascot { width: 100%; border-radius: 12px }
+        .section { padding: 34px 0; border-top: 1px solid var(--line) }
+        .sec-title { font-size: 26px; margin: 0 0 14px }
+        .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px }
+        .ps-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px }
+        .stat { background: #101015; border: 1px solid var(--line); border-radius: 12px; padding: 12px }
+        .label { color: var(--muted); font-size: 12px }
+        .val { font-weight: 900; font-size: 18px }
+        .bar { height: 12px; background: #0a0f0e; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; margin-top: 6px }
+        .fill { height: 100%; width: 0%; background: linear-gradient(90deg, #16a34a, #34d399) }
+        .row { display: flex; gap: 10px; align-items: center; margin-top: 10px }
+        .input { flex: 1; background: #0a120f; border: 1px solid var(--line); color: var(--ink); border-radius: 12px; padding: 14px 16px; font-size: 16px }
+        .note { color: var(--muted); font-size: 13px; margin-top: 6px }
+        .status { display: inline-block; margin-top: 8px; padding: 6px 10px; border-radius: 10px; font-size: 14px }
+        .ok { background: #0f2b1f; border: 1px solid #1f623f }
+        .bad { background: #2b0f13; border: 1px solid #80333f }
+        .timeline { display: grid; gap: 12px }
+        .step { display: grid; grid-template-columns: 120px 1fr; gap: 12px }
+        .when { font-weight: 900; color: #bfe6d3 }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,.8); display: none; align-items: center; justify-content: center; z-index: 50 }
+        .modal.show { display: flex }
+        .modal-inner { max-width: 94vw; max-height: 90vh; background: #0e0e11; border: 1px solid var(--line); border-radius: 12px; padding: 10px; position: relative }
+        .modal img { max-width: 90vw; max-height: 76vh; display: block; border-radius: 8px }
+        .modal .controls { display: flex; justify-content: space-between; align-items: center; margin-top: 8px }
+        .modal .controls button { padding: 10px 14px; border-radius: 10px; border: 1px solid var(--line); background: #191922; color: #fff; font-weight: 800; cursor: pointer }
+        .modal .x { position: absolute; right: 6px; top: 6px; background: #2b2b33; border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer }
 
         @media (max-width:900px) {
-            .hero {
-                grid-template-columns: 1fr
-            }
-
-            h1 {
-                font-size: 36px
-            }
-
-            .ps-grid {
-                grid-template-columns: 1fr
-            }
+            .hero { grid-template-columns: 1fr }
+            h1 { font-size: 36px }
+            .ps-grid { grid-template-columns: 1fr }
         }
     </style>
 </head>
@@ -432,11 +180,8 @@
                 <div class="stat">
                     <div class="label">Raised</div>
                     <div class="val"><span id="raised">0.00</span> SOL</div>
-                    <div class="bar">
-                        <div id="barfill" class="fill"></div>
-                    </div>
-                    <div class="note"><span id="pct">0.0</span>% of <span id="target">0</span> SOL • $<span
-                            id="usd">0</span></div>
+                    <div class="bar"><div id="barfill" class="fill"></div></div>
+                    <div class="note"><span id="pct">0.0</span>% of <span id="target">0</span> SOL • $<span id="usd">0</span></div>
                 </div>
                 <div class="stat">
                     <div class="label">Price</div>
@@ -451,8 +196,7 @@
             </div>
 
             <div class="row">
-                <input id="amount" class="input" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*"
-                    placeholder="Amount in SOL" />
+                <input id="amount" class="input" inputmode="decimal" pattern="[0-9]*[.,]?[0-9]*" placeholder="Amount in SOL" />
                 <button id="buyBtn" class="btn good" type="button">Buy</button>
             </div>
             <div class="note">You’ll approve a SOL transfer to the treasury (Mainnet).</div>
@@ -475,18 +219,9 @@
     <section class="wrap section" id="roadmap">
         <h2 class="sec-title">Roadmap</h2>
         <div class="timeline card">
-            <div class="step">
-                <div class="when">Q3 2025</div>
-                <div>• Presale launch • Community bootstrapping • Whitepaper</div>
-            </div>
-            <div class="step">
-                <div class="when">Q4 2025</div>
-                <div>• Raydium listing • CMC/CG listings • Marketing push</div>
-            </div>
-            <div class="step">
-                <div class="when">Q1 2026</div>
-                <div>• Utility reveal: MOJO perks + partnerships • Community grants</div>
-            </div>
+            <div class="step"><div class="when">Q3 2025</div><div>• Presale launch • Community bootstrapping • Whitepaper</div></div>
+            <div class="step"><div class="when">Q4 2025</div><div>• Raydium listing • CMC/CG listings • Marketing push</div></div>
+            <div class="step"><div class="when">Q1 2026</div><div>• Utility reveal: MOJO perks + partnerships • Community grants</div></div>
         </div>
     </section>
 
@@ -508,21 +243,32 @@
     </div>
 
     <script>
+        // Footer year
         document.getElementById('y').textContent = new Date().getFullYear();
 
         /* ========= CONFIG ========= */
+        // Replace this with your token mint address (SPL token) if you want it displayed in the UI
+        const TOKEN_MINT_ADDRESS = "PASTE_YOUR_MINT_ADDRESS_HERE"; // <-- replace with your mint address
+
+        // Treasury: where SOL contributions land
         const TREASURY = "3rJbVUjfeUoSDh9RGh2ijJYCdaWW28iqy47saqAbUCVx"; // receive SOL here
         const PRICE_TOKENS_PER_SOL = 2_000_000;
         const TARGET_SOL = 200;
         const BASELINE_SOL = 0.00;
         const MIN_SOL = 0.1;
         const MAX_SOL = 3;
-        // ✅ FIXED: Helius RPC (replace YOUR_KEY)
+        // Helius RPC (replace YOUR_KEY if you want) — this one in the example is already set
         const RPC_ENDPOINT = "https://mainnet.helius-rpc.com/?api-key=c499522c-5d48-4559-99dc-be0cf108a0da";
         const COINGECKO = "https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd";
         const WP_TOTAL = 15;
         const WP_PATH = (i) => `whitepaper/${i}.png`;
 
+        // If a mint address is provided, show it in the UI
+        if (TOKEN_MINT_ADDRESS && TOKEN_MINT_ADDRESS !== "PASTE_YOUR_MINT_ADDRESS_HERE") {
+            document.getElementById('contract').textContent = TOKEN_MINT_ADDRESS;
+        } else {
+            document.getElementById('contract').textContent = 'COMING-SOON';
+        }
 
         /* ===== COUNTDOWN ===== */
         const launchDate = new Date("Sep 23, 2025 18:00:00").getTime();
@@ -540,7 +286,15 @@
         const pageEl = document.getElementById('wpPage');
         const totalEl = document.getElementById('wpTotal'); totalEl.textContent = WP_TOTAL;
         let page = 1;
-        function showWP(n) { page = ((n - 1 + WP_TOTAL) % WP_TOTAL) + 1; img.src = WP_PATH(page); pageEl.textContent = page; modal.classList.add('show'); modal.setAttribute('aria-hidden', 'false'); }
+        function showWP(n) {
+            page = ((n - 1 + WP_TOTAL) % WP_TOTAL) + 1;
+            img.src = WP_PATH(page);
+            pageEl.textContent = page;
+            modal.classList.add('show'); modal.setAttribute('aria-hidden', 'false');
+            // preload neighbors
+            const next = new Image(); next.src = WP_PATH(((page) % WP_TOTAL) + 1);
+            const prev = new Image(); prev.src = WP_PATH(((page - 2 + WP_TOTAL) % WP_TOTAL) + 1);
+        }
         function hideWP() { modal.classList.remove('show'); modal.setAttribute('aria-hidden', 'true'); }
         document.getElementById('openWP').onclick = () => showWP(1);
         document.getElementById('openWP2').onclick = () => showWP(1);
@@ -548,11 +302,17 @@
         document.getElementById('prevWP').onclick = () => showWP(page - 1);
         document.getElementById('nextWP').onclick = () => showWP(page + 1);
         modal.addEventListener('click', e => { if (e.target === modal) hideWP(); });
+        window.addEventListener('keydown', (e) => {
+            if (!modal.classList.contains('show')) return;
+            if (e.key === 'Escape') hideWP();
+            if (e.key === 'ArrowLeft') showWP(page - 1);
+            if (e.key === 'ArrowRight') showWP(page + 1);
+        });
 
         /* ===== PRESALE / WALLET ===== */
         const { Connection, PublicKey, SystemProgram, Transaction, LAMPORTS_PER_SOL } = solanaWeb3;
         const $ = id => document.getElementById(id);
-        const short = k => k.slice(0, 4) + '…' + k.slice(-4);
+        const short = k => (k && k.length ? (k.slice(0, 4) + '…' + k.slice(-4)) : k);
 
         $('treasuryShort').textContent = short(TREASURY);
         $('perSol').textContent = PRICE_TOKENS_PER_SOL.toLocaleString();
@@ -574,7 +334,7 @@
         };
 
         async function loadSolPrice() {
-            try { const r = await fetch(COINGECKO); const j = await r.json(); state.solUsd = j?.solana?.usd || 0; } catch { }
+            try { const r = await fetch(COINGECKO); const j = await r.json(); state.solUsd = j?.solana?.usd || 0; } catch { state.solUsd = 0; }
         }
         function setProgress(raised) {
             $('raised').textContent = raised.toFixed(2);
@@ -589,8 +349,11 @@
                 const current = lamports / LAMPORTS_PER_SOL;
                 const raised = Math.max(0, current - BASELINE_SOL);
                 setProgress(raised);
-            } catch { }
+            } catch (err) { console.error('refreshRaised failed', err); }
         }
+
+        // Disable buy until wallet is connected
+        $('buyBtn').disabled = true;
 
         // Connect
         $('connectBtn').addEventListener('click', async () => {
@@ -601,7 +364,15 @@
                 state.provider = p;
                 state.pubkey = new PublicKey((res?.publicKey || p.publicKey).toString());
                 $('connectBtn').textContent = 'Connected'; $('connectBtn').disabled = true;
-                setWallet('connected: ' + state.pubkey.toBase58(), true);
+
+                // show basic balance
+                try {
+                  const bal = await state.connection.getBalance(state.pubkey, 'confirmed') / LAMPORTS_PER_SOL;
+                  setWallet(short(state.pubkey.toBase58()) + ' • ' + bal.toFixed(4) + ' SOL', true);
+                } catch (e) { setWallet('connected: ' + state.pubkey.toBase58(), true); }
+
+                // enable buy
+                $('buyBtn').disabled = false;
             } catch (e) { setWallet('connect failed: ' + (e.message || e), false); alert(e.message || e); }
         });
 
@@ -617,40 +388,56 @@
             try {
                 const p = detectProvider();
                 if (!p) return alert('Open inside Phantom (mobile) or install extension.');
+
                 if (!state.pubkey) {
                     const res = await p.connect({ onlyIfTrusted: false });
                     state.provider = p;
                     state.pubkey = new PublicKey((res?.publicKey || p.publicKey).toString());
                     $('connectBtn').textContent = 'Connected'; $('connectBtn').disabled = true;
                     setWallet('connected: ' + state.pubkey.toBase58(), true);
+                    $('buyBtn').disabled = false;
                 }
+
                 const sol = parseFloat($('amount').value.trim().replace(',', '.'));
                 if (isNaN(sol) || sol <= 0) throw new Error('Enter a valid SOL amount.');
                 if (sol < MIN_SOL) throw new Error(`Minimum is ${MIN_SOL} SOL.`);
                 if (sol > MAX_SOL) throw new Error(`Maximum is ${MAX_SOL} SOL.`);
 
+                // build transfer instruction
                 const ix = SystemProgram.transfer({
                     fromPubkey: state.pubkey,
                     toPubkey: state.treasury,
                     lamports: Math.round(sol * LAMPORTS_PER_SOL),
                 });
 
+                // get recent blockhash
                 const { blockhash, lastValidBlockHeight } = await state.connection.getLatestBlockhash('confirmed');
                 const tx = new Transaction({ recentBlockhash: blockhash, feePayer: state.pubkey }).add(ix);
 
                 let signature;
+                $('result').innerHTML = `⏳ Submitted…`;
+                // Phantom supports signAndSendTransaction or signTransaction
                 if (state.provider.signAndSendTransaction) {
-                    ({ signature } = await state.provider.signAndSendTransaction(tx));
-                } else {
+                    const signed = await state.provider.signAndSendTransaction(tx);
+                    signature = signed.signature;
+                } else if (state.provider.signTransaction) {
                     const signed = await state.provider.signTransaction(tx);
                     signature = await state.connection.sendRawTransaction(signed.serialize());
+                } else {
+                    throw new Error('Wallet does not support transaction signing.');
                 }
+
+                // show explorer link while waiting for confirmation
                 $('result').innerHTML = `⏳ Submitted… <a target="_blank" href="https://explorer.solana.com/tx/${signature}">view</a>`;
+
                 await state.connection.confirmTransaction({ signature, blockhash, lastValidBlockHeight }, 'confirmed');
+
                 $('result').innerHTML = `✅ Success! <a target="_blank" href="https://explorer.solana.com/tx/${signature}">Explorer</a>`;
                 $('amount').value = ''; $('willGet').textContent = '0';
-                refreshRaised();
+                await refreshRaised();
+
             } catch (e) {
+                console.error(e);
                 $('result').textContent = '❌ ' + (e.message || String(e));
                 alert(e.message || e);
             }
@@ -666,7 +453,8 @@
             if (p?.isConnected && p.publicKey) {
                 state.provider = p; state.pubkey = new PublicKey(p.publicKey.toString());
                 $('connectBtn').textContent = 'Connected'; $('connectBtn').disabled = true;
-                setWallet('connected (eager): ' + state.pubkey.toBase58(), true);
+                try { const bal = await state.connection.getBalance(state.pubkey, 'confirmed') / LAMPORTS_PER_SOL; setWallet(short(state.pubkey.toBase58()) + ' • ' + bal.toFixed(4) + ' SOL', true); } catch { setWallet('connected (eager): ' + state.pubkey.toBase58(), true); }
+                $('buyBtn').disabled = false;
             } else {
                 setWallet('not detected ❌ (open in Phantom)', false);
             }
@@ -675,14 +463,14 @@
         // Copy contract
         document.getElementById('copyBtn').onclick = () => {
             const t = document.getElementById('contract').textContent;
+            if (!t || t === 'COMING-SOON') return alert('No contract address set. Replace TOKEN_MINT_ADDRESS in the code.');
             navigator.clipboard.writeText(t).then(() => alert('Copied'));
         };
 
         // Footer treasury short
         document.getElementById('treasuryShort').textContent = short(TREASURY);
+
     </script>
 </body>
 
 </html>
-
-
