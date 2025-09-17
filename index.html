@@ -15,7 +15,7 @@
         (function () {
             // Ensure Buffer exists for Safari/Phantom mobile
             if (!window.Buffer && window.buffer && window.buffer.Buffer) {
-                window.Buffer = window.buffer.Buffer;
+                window.Buffer = buffer.Buffer;
             }
             // Some libs assume these
             if (!window.global) window.global = window;
@@ -674,3 +674,4 @@
 </body>
 
 </html>
+
