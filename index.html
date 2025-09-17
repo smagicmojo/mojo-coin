@@ -7,23 +7,54 @@
   <meta name="description" content="$MOJO is the coin with the magic mojo on Solana. Fun community, fast vibes, and meme-fueled momentum."/>
   <link rel="icon" href="images/favicon.png"/>
 
-  <!-- 0) Node-style globals first (some libs look for these) -->
+  <!-- ✅ Inline Node-style globals + minimal Buffer shim (works on iOS/Windows) -->
   <script>
+  (function () {
+    // Provide global + process early
     window.global = window;
-    window.process = { env: { NODE_ENV: 'production' } };
+    window.process = window.process || { env: { NODE_ENV: 'production' } };
+
+    // If Buffer missing, define a lightweight shim sufficient for most browser libs
+    if (typeof window.Buffer === 'undefined') {
+      function hexToBytes(h) {
+        h = (h || '').toString().replace(/^0x/, '').toLowerCase();
+        var len = (h.length / 2) | 0, out = new Uint8Array(len);
+        for (var i = 0; i < len; i++) out[i] = parseInt(h.substr(i*2, 2), 16) || 0;
+        return out;
+      }
+      function b64ToBytes(b64) {
+        try { var bin = atob(b64); } catch(e){ bin=''; }
+        var out = new Uint8Array(bin.length);
+        for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i) & 255;
+        return out;
+      }
+      function utf8ToBytes(str) { return new TextEncoder().encode(String(str)); }
+
+      function from(input, enc) {
+        if (input instanceof Uint8Array) return new Uint8Array(input);      // copy
+        if (Array.isArray(input))        return new Uint8Array(input);
+        if (typeof input === 'string') {
+          if (enc === 'hex')    return hexToBytes(input);
+          if (enc === 'base64') return b64ToBytes(input);
+          return utf8ToBytes(input);
+        }
+        // Fallback: JSON/stringify-ish
+        try { return utf8ToBytes(JSON.stringify(input)); }
+        catch { return utf8ToBytes(String(input)); }
+      }
+      function alloc(n) { return new Uint8Array(n|0); }
+      function isBuffer(v){ return v instanceof Uint8Array; }
+
+      // Expose minimal API some libs expect
+      var MiniBuffer = { from, alloc, isBuffer };
+      window.Buffer = globalThis.Buffer = MiniBuffer;
+    }
+  })();
   </script>
 
-  <!-- 1) Buffer polyfill (must complete before web3.js).
-         Use onload to *guarantee* Buffer is attached before next script runs.
-         v param busts Safari cache. -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/buffer/6.0.3/buffer.min.js?v=3"
-          onload="(function(){
-            var B = (window.buffer && window.buffer.Buffer) || window.Buffer;
-            if (B) { window.Buffer = B; globalThis.Buffer = B; }
-          })()"></script>
+  <!-- Solana web3.js AFTER shim (no async/defer) -->
+  <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js?v=4"></script>
 
-  <!-- 2) Solana web3.js AFTER Buffer (no async/defer) -->
-  <script src="https://unpkg.com/@solana/web3.js@1.95.3/lib/index.iife.min.js?v=3"></script>
 
   <style>
     :root{
