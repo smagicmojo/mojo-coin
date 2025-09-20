@@ -1,0 +1,20 @@
+{
+    "name": "Elder of the Jungle",
+    "symbol": "MOJO",
+    "description": "The wise guardian of the jungle, keeper of ancient secrets and protector of balance.",
+    "image": "https://smagicmojo.github.io/mojo-coin/nfts/Elder.PNG",
+    "attributes": [
+        {
+            "trait_type": "Role",
+            "value": "Elder"
+        },
+        {
+            "trait_type": "Environment",
+            "value": "Jungle"
+        },
+        {
+            "trait_type": "Power",
+            "value": "Wisdom"
+        }
+    ]
+}

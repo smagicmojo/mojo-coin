@@ -1,0 +1,20 @@
+{
+    "name": "Jungle Fam",
+    "symbol": "MOJO",
+    "description": "The united family of the jungle, thriving together in harmony.",
+    "image": "https://smagicmojo.github.io/mojo-coin/nfts/Fam.PNG",
+    "attributes": [
+        {
+            "trait_type": "Group",
+            "value": "Family"
+        },
+        {
+            "trait_type": "Unity",
+            "value": "Strong Bond"
+        },
+        {
+            "trait_type": "Spirit",
+            "value": "Harmony"
+        }
+    ]
+}
