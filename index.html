@@ -161,11 +161,9 @@
                 <a class="btn good" href="#presale">Join Presale</a>
                 <button id="openWP2" class="btn secondary" type="button">Whitepaper</button>
             </div>
+            
 
-            <div class="card" style="margin-top:14px;text-align:center">
-                <div style="font-weight:900;">🚀 Launch Countdown</div>
-                <div id="timer" style="font-size:30px;color:var(--accent);margin-top:8px">Loading…</div>
-            </div>
+            
         </div>
 
         <div class="card">
@@ -271,14 +269,14 @@
         }
 
         /* ===== COUNTDOWN ===== */
-        const launchDate = new Date("Sep 23, 2025 18:00:00").getTime();
+      /*  const launchDate = new Date("Sep 23, 2025 18:00:00").getTime();
         const timerEl = document.getElementById("timer");
         setInterval(() => {
             const now = Date.now(), d = launchDate - now;
             if (d <= 0) { timerEl.textContent = "🚀 Launched!"; return; }
             const dd = Math.floor(d / 86400000), hh = Math.floor(d % 86400000 / 3600000), mm = Math.floor(d % 3600000 / 60000), ss = Math.floor(d % 60000 / 1000);
             timerEl.textContent = `${dd}d ${hh}h ${mm}m ${ss}s`;
-        }, 1000);
+        }, 1000); */
 
         /* ===== WHITEPAPER MODAL ===== */
         const modal = document.getElementById('wpModal');
@@ -474,6 +472,7 @@
 </body>
 
 </html>
+
 
 
 
