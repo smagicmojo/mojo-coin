@@ -1,20 +1,10 @@
 {
-    "name": "Banana Warrior",
-    "symbol": "MOJO",
-    "description": "A fearless jungle warrior, fueled by bananas and legendary courage.",
-    "image": "https://smagicmojo.github.io/mojo-coin/nfts/Warrior.PNG",
-    "attributes": [
-        {
-            "trait_type": "Role",
-            "value": "Warrior"
-        },
-        {
-            "trait_type": "Weapon",
-            "value": "Banana Blade"
-        },
-        {
-            "trait_type": "Strength",
-            "value": "Courage"
-        }
-    ]
+  "name": "Warrior",
+  "symbol": "MOJO",
+  "description": "Warrior — the brave fighter of the Magic Mojo collection.",
+  "image": "https://raw.githubusercontent.com/smagicmojo/mojo-coin/main/nfts/Warrior.PNG",
+  "attributes": [
+    { "trait_type": "Class", "value": "Warrior" },
+    { "trait_type": "Power", "value": "Strength" }
+  ]
 }
