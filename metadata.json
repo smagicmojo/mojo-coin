@@ -2,10 +2,11 @@
   "name": "Mojo Coin",
   "symbol": "MOJO",
   "description": "$MOJO — the coin with the magic mojo ✨🐒",
-  "image": "https://smagicmojo.github.io/mojo-coin/mojo.png",
+  "image": "https://magicmojocoin/mojo.png",
   "extensions": {
-    "website": "https://smagicmojo.github.io/mojo-coin",
+    "website": "https://magicmojocoin.com",
     "twitter": "https://x.com/magicmojocoin",
     "telegram": "https://t.me/mojo_coin1"
   }
 }
+
